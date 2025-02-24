@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<style>
+
+</style>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>SB Admin 2 - Dashboard</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+
+</head>
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+          <!-- Sidebar Brand -->
+          <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+              <div class="sidebar-brand-icon rotate-n-15">
+                  <i class="fas fa-laugh-wink"></i>
+              </div>
+              <div class="sidebar-brand-text mx-3"><font _mstmutation="1" _msttexthash="10666266" _msthash="1">SSR团队</font></div>
+          </a>
+          <!-- Divider -->
+          <hr class="sidebar-divider my-0">
+          <!-- Nav Item - Dashboard -->
+          <li class="nav-item active">
+              <a class="nav-link" href="first_page.html">
+                  <i class="fas fa-fw fa-tachometer-alt"></i>
+                  <span _msttexthash="8308430" _msthash="3">首页展示</span></a>
+          </li>
+          <hr class="sidebar-divider">
+          <div class="sidebar-heading" _msttexthash="4554719" _msthash="4">数据图表</div>
+          <li class="nav-item">
+              <a class="nav-link" href="chart.html">
+                  <i class="fas fa-fw fa-chart-area"></i>
+                  <span _msttexthash="5658250" _msthash="24">图表</span></a>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link" href="tables.html">
+                  <i class="fas fa-fw fa-table"></i>
+                  <span _msttexthash="3177720" _msthash="25">表</span></a>
+          </li>
+          <!-- 你可以添加更多导航项 -->
+          <li class="nav-item">
+              <a class="nav-link collapsed" href="XBox.html">
+                  <i class="fas fa-fw fa-cog"></i>
+                  <span _msttexthash="5055388" _msthash="5">手柄效果</span>
+              </a>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link collapsed" href="XBox.html">
+                  <i class="fas fa-fw fa-wrench"></i>
+                  <span _msttexthash="9967711" _msthash="9">水下仿真插入</span>
+              </a>
+          </li>
+      </ul>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                  <!-- Sidebar Toggle (Topbar) -->
+                  <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                      <i class="fa fa-bars"></i>
+                  </button>
+                  <!-- Topbar Navbar -->
+                  <ul class="navbar-nav ml-auto">
+                      <!-- 可添加更多内容 -->
+                      <li class="nav-item dropdown no-arrow">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="mr-2 d-none d-lg-inline text-gray-600 small" _msttexthash="22648327" _msthash="55">哈威SSR团队研发</span>
+                            <img class="img-profile rounded-circle" src="img/picture.png">
+                        </a>
+                    </li>
+                  </ul>
+              </nav>
+                 <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">各项数值展示</h1>
+                    </div>
+
+                    <!-- Content Row -->
+                    <div class="row">
+
+                        <!-- Earnings (Monthly) Card Example -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-primary shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                水中PH值</div>
+                                            <span id="phValue" class="h5 mb-0 font-weight-bold text-gray-800 mr-3">6.8</span><span id="phUnit" class="mr-2">单位：pH</span>
+                                          </div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Earnings (Monthly) Card Example -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-success shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                                光强</div>
+                                            <span id="luxValue" class= "h5 mb-0 font-weight-bold text-gray-800 mr-3">2300</span> <span id="LUXVule">单位：lux</span>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Earnings (Monthly) Card Example -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-info shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">速度
+                                            </div>
+                                            <span id="speedValue" class= "h5 mb-0 font-weight-bold text-gray-800 mr-3">2300</span> <span id="SPEEDVule">单位：m/s</span>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pending Requests Card Example -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-warning shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                                电导率</div>
+                                            <span id="esValue" class="h5 mb-0 font-weight-bold text-gray-800 mr-3">1800</span><span id="ESVule">单位：µS/cm</span>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Content Row -->
+
+                    <div class="row">
+
+                        <!-- Area Chart -->
+                        <div class="col-xl-8 col-lg-7">
+                            <div class="card shadow mb-4">
+                                <!-- Card Header - Dropdown -->
+                                <div
+                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-primary">水下温度</h6>
+                                    <div class="dropdown no-arrow">
+                                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                            aria-labelledby="dropdownMenuLink">
+                                            <div class="dropdown-header">Dropdown Header:</div>
+                                            <a class="dropdown-item" href="#">Action</a>
+                                            <a class="dropdown-item" href="#">Another action</a>
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item" href="#">Something else here</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Card Body -->
+                                <div class="card-body">
+                                    <div class="chart-area">
+                                        <canvas id="myAreaChart" width="100" height="37"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pie Chart -->
+                        <div class="col-xl-4 col-lg-5">
+                            <div class="card shadow mb-4">
+                                <!-- Card Header - Dropdown -->
+                                <div
+                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-primary">Revenue Sources</h6>
+                                    <div class="dropdown no-arrow">
+                                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                            aria-labelledby="dropdownMenuLink">
+                                            <div class="dropdown-header">Dropdown Header:</div>
+                                            <a class="dropdown-item" href="#">Action</a>
+                                            <a class="dropdown-item" href="#">Another action</a>
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item" href="#">Something else here</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Card Body -->
+                                <div class="card-body">
+                                    <div class="chart-pie pt-4 pb-2">
+                                        <canvas id="myPieChart"></canvas>
+                                    </div>
+                                    <div class="mt-4 text-center small">
+                                        <span class="mr-2">
+                                            <i class="fas fa-circle text-primary"></i> Direct
+                                        </span>
+                                        <span class="mr-2">
+                                            <i class="fas fa-circle text-success"></i> Social
+                                        </span>
+                                        <span class="mr-2">
+                                            <i class="fas fa-circle text-info"></i> Referral
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Content Row -->
+                    <div class="row">
+
+                        <!-- Content Column -->
+                        <div class="col-lg-6 mb-4">
+
+                            <!-- Project Card Example -->
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold text-primary">Projects</h6>
+                                </div>
+                                <div class="card-body">
+                                    <h4 class="small font-weight-bold">YAW <span
+                                            class="float-right" id="yawValue">0°</span></h4>
+                                    <div class="progress mb-4">
+                                        <div class="progress-bar bg-danger" id="yawProgress" role="progressbar" style="width: 0%"
+                                            aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    <h4 class="small font-weight-bold">PITCH <span
+                                            class="float-right" id="pitchValue">0°</span></h4>
+                                    <div class="progress mb-4">
+                                        <div class="progress-bar bg-warning" id="pitchProgress" role="progressbar" style="width: 0%"
+                                            aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    <h4 class="small font-weight-bold">ROW <span
+                                            class="float-right" id="rowValue">0°</span></h4>
+                                    <div class="progress mb-4">
+                                        <div class="progress-bar" id="rowProgress" role="progressbar" style="width: 0%"
+                                            aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Color System -->
+                            <div class="row">
+                                <div class="col-lg-6 mb-4">
+                                    <div class="card bg-primary text-white shadow">
+                                        <div class="card-body">
+                                            Primary
+                                            <div class="text-white-50 small">#4e73df</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 mb-4">
+                                    <div class="card bg-success text-white shadow">
+                                        <div class="card-body">
+                                            Success
+                                            <div class="text-white-50 small">#1cc88a</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 mb-4">
+                                    <div class="card bg-info text-white shadow">
+                                        <div class="card-body">
+                                            Info
+                                            <div class="text-white-50 small">#36b9cc</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 mb-4">
+                                    <div class="card bg-warning text-white shadow">
+                                        <div class="card-body">
+                                            Warning
+                                            <div class="text-white-50 small">#f6c23e</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 mb-4">
+                                    <div class="card bg-danger text-white shadow">
+                                        <div class="card-body">
+                                            Danger
+                                            <div class="text-white-50 small">#e74a3b</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 mb-4">
+                                    <div class="card bg-secondary text-white shadow">
+                                        <div class="card-body">
+                                            Secondary
+                                            <div class="text-white-50 small">#858796</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 mb-4">
+                                    <div class="card bg-light text-black shadow">
+                                        <div class="card-body">
+                                            Light
+                                            <div class="text-black-50 small">#f8f9fc</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 mb-4">
+                                    <div class="card bg-dark text-white shadow">
+                                        <div class="card-body">
+                                            Dark
+                                            <div class="text-white-50 small">#5a5c69</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="col-lg-6 mb-4">
+
+                            <!-- Illustrations -->
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold text-primary">Illustrations</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="text-center">
+                                        <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;"
+                                            src="img/undraw_posting_photo.svg" alt="...">
+                                    </div>
+                                    <p>Add some quality, svg illustrations to your project courtesy of <a
+                                            target="_blank" rel="nofollow" href="https://undraw.co/">unDraw</a>, a
+                                        constantly updated collection of beautiful svg images that you can use
+                                        completely free and without attribution!</p>
+                                    <a target="_blank" rel="nofollow" href="https://undraw.co/">Browse Illustrations on
+                                        unDraw &rarr;</a>
+                                </div>
+                            </div>
+
+                            <!-- Approach -->
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold text-primary">Development Approach</h6>
+                                </div>
+                                <div class="card-body">
+                                    <p>SB Admin 2 makes extensive use of Bootstrap 4 utility classes in order to reduce
+                                        CSS bloat and poor page performance. Custom CSS classes are used to create
+                                        custom components and custom utility classes.</p>
+                                    <p class="mb-0">Before working with this theme, you should become familiar with the
+                                        Bootstrap framework, especially the utility classes.</p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; Your Website 2021</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="login.html">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="js/sb-admin-2.min.js"></script>
+
+    <!-- Page level plugins -->
+    <script src="vendor/chart.js/Chart.min.js"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="js/demo/chart-area-demo.js"></script>
+    <script src="js/demo/chart-pie-demo.js"></script>
+
+</body>
+<script>
+  // 函数：生成6.0到7.0之间的小数点后一位随机数
+function generateRandomPH() {
+    const min = 6.0;
+    const max = 7.0;
+    // 生成0到10之间的整数，再加上0.0到0.9
+    const random = Math.random() * (max - min) + min;
+    // 保留一位小数
+    return Math.round(random * 10) / 10;
+}
+
+// 函数：更新PH值到页面
+function updatePHValue() {
+    const phElement = document.getElementById('phValue');
+    if (phElement) {
+        const newPH = generateRandomPH();
+        phElement.textContent = newPH.toFixed(1);
+    } else {
+        console.error('未找到ID为 "phValue" 的元素。');
+    }
+}
+// 函数：生成2000.0到3000.0之间的小数点后一位随机数
+function generateRandomLux() {
+    const min = 2000.0;
+    const max = 4000.0;
+    // 生成2000到4000之间的整数，再加上0.0到0.9
+    const random = Math.random() * (max - min) + min;
+    // 保留一位小数
+    return Math.round(random * 10) / 10;
+}
+
+// 函数：更新速度值到页面
+function updateLuxValue() {
+    const luxElement = document.getElementById('luxValue');
+    if (luxElement) {
+        const newLux = generateRandomLux();
+        luxElement.textContent = newLux.toFixed(1);
+    } else {
+        console.error('未找到ID为 "luxValue" 的元素。');
+    }
+}
+// 函数：生成6.0到7.0之间的小数点后一位随机数
+function generateRandomSpeed() {
+    const min = 2000.0;
+    const max = 4000.0;
+    // 生成0到10之间的整数，再加上0.0到0.9
+    const random = Math.random() * (max - min) + min;
+    // 保留一位小数
+    return Math.round(random * 10) / 10;
+}
+
+// 函数：更新PH值到页面
+function updateSpeedValue() {
+    const speedElement = document.getElementById('speedValue');
+    if (speedElement) {
+        const newSpeed = generateRandomSpeed();
+        speedElement.textContent = newSpeed.toFixed(1);
+    } else {
+        console.error('未找到ID为 "speedValue" 的元素。');
+    }
+}// 函数：生成6.0到7.0之间的小数点后一位随机数
+function generateRandomES() {
+    const min = 2000.0;
+    const max = 4000.0;
+    // 生成0到10之间的整数，再加上0.0到0.9
+    const random = Math.random() * (max - min) + min;
+    // 保留一位小数
+    return Math.round(random * 10) / 10;
+}
+
+// 函数：更新PH值到页面
+function updateESValue() {
+    const esElement = document.getElementById('esValue');
+    if (esElement) {
+        const newES = generateRandomES();
+        esElement.textContent = newES.toFixed(1);
+    } else {
+        console.error('未找到ID为 "esValue" 的元素。');
+    }
+}
+
+// 生成一个29到35之间的随机整数
+function generateRandomValue() {
+  return Math.floor(Math.random() * (35 - 29 + 1)) + 29;
+}
+
+// 生成初始数据（长度为12，随机数在29到35之间）
+function generateInitialData() {
+  var data = [];
+  for (var i = 0; i < 12; i++) {
+    data.push(generateRandomValue());
+  }
+  return data;
+}
+
+// 初始化X轴标签（这里用数字1到12，你也可以改为月份等）
+var labels = [];
+for (var i = 1; i <= 12; i++) {
+  labels.push(i);
+}
+
+// 获取 canvas 上下文
+var ctxLine = document.getElementById('myAreaChart').getContext('2d');
+
+// 创建折线图（动画配置中关闭 y 轴动画，保留 x 轴动画）
+var myAreaChart = new Chart(ctxLine, {
+  type: 'line',
+  data: {
+    labels: labels,
+    datasets: [{
+      label: '销量',
+      data: generateInitialData(),
+      borderColor: 'rgba(75, 192, 192, 1)',
+      tension: 0.4,
+      fill: false
+    }]
+  },
+  options: {
+    animations: {
+      x: { duration: 1000 },
+      y: { duration: 0 }
+    },
+    scales: {
+      y: {
+        min: 20,
+        max: 40
+      }
+    }
+  }
+});
+
+// 每隔3秒更新数据：左移一格、右侧添加新数据
+setInterval(function() {
+  // 移除最左侧标签，并添加新的标签（使X轴数据整体左移）
+  myAreaChart.data.labels.shift();
+  myAreaChart.data.labels.push(myAreaChart.data.labels[myAreaChart.data.labels.length - 1] + 1);
+  
+  // 移除最左侧数据，追加一个新的随机数（范围29~35）
+  myAreaChart.data.datasets[0].data.shift();
+  myAreaChart.data.datasets[0].data.push(generateRandomValue());
+  
+  // 更新图表
+  myAreaChart.update();
+}, 3000);
+
+// 定义GraphQL查询
+const GET_JOYSTICK_DATA = `
+  query {
+    joystick {
+      YOW
+      PITCH
+      ROW
+    }
+  }
+`;
+
+function updateEulerAngles(yaw, pitch, row) {
+    // 更新YAW显示值
+    const yawValueText = document.getElementById('yawValue');
+    yawValueText.textContent = yaw.toFixed(1) + '°';  // 保留一位小数
+
+    // 更新PITCH显示值
+    const pitchValueText = document.getElementById('pitchValue');
+    pitchValueText.textContent = pitch.toFixed(1) + '°';
+
+    // 更新ROW显示值
+    const rowValueText = document.getElementById('rowValue');
+    rowValueText.textContent = row.toFixed(1) + '°';
+}
+
+// 更新进度条和显示的函数
+function updateProgressBar(yaw, pitch, row) {
+    // 更新YAW进度条
+    const yawProgressBar = document.getElementById('yawProgress');
+    const yawValueText = document.getElementById('yawValue');
+    yawProgressBar.style.width = yaw + '%';  // 更新进度条的宽度
+    yawProgressBar.setAttribute('aria-valuenow', yaw);  // 更新aria值
+    yawValueText.textContent = yaw.toFixed(1) + '°';  // 更新显示的百分比
+
+    // 更新PITCH进度条
+    const pitchProgressBar = document.getElementById('pitchProgress');
+    const pitchValueText = document.getElementById('pitchValue');
+    pitchProgressBar.style.width = pitch + '%';
+    pitchProgressBar.setAttribute('aria-valuenow', pitch);
+    pitchValueText.textContent = pitch.toFixed(1) + '°';  // 显示为小数
+
+    // 更新ROW进度条
+    const rowProgressBar = document.getElementById('rowProgress');
+    const rowValueText = document.getElementById('rowValue');
+    rowProgressBar.style.width = row + '%';
+    rowProgressBar.setAttribute('aria-valuenow', row);
+    rowValueText.textContent = row.toFixed(1) + '°';  // 显示为小数
+}
+
+// 使用fetch发送GraphQL请求
+function fetchJoystickData() {
+    fetch('http://localhost:5000/graphql', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            query: GET_JOYSTICK_DATA,
+        }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        const joystickData = data.data.joystick;
+        if (!joystickData) {
+            console.log('Joystick data not available');
+            return;
+        }
+
+        // 获取YAW、PITCH、ROW的数据
+        const yaw = joystickData.YOW; // 假设返回的数据格式与此类似
+        const pitch = joystickData.PITCH;
+        const row = joystickData.ROW;
+
+        // 更新进度条
+        updateProgressBar(yaw, pitch, row);
+        updateEulerAngles(yaw, pitch, row);
+    })
+    .catch(error => {
+        console.error('Error fetching joystick data:', error);
+    });
+}
+
+// 设置定时器，每隔1秒获取一次数据
+setInterval(fetchJoystickData, 1000);
+
+
+
+// 设置定时器，每隔1秒调用一次GraphQL查询
+setInterval(fetchJoystickData, 10); // 1000ms = 1秒
+
+// 设置定时器，每秒更新一次PH值
+setInterval(updatePHValue, 1000);
+setInterval(updateLuxValue,1000);
+setInterval(updateSpeedValue,1000);
+setInterval(updateESValue,1000);
+// 初始调用一次以避免等待1秒才显示
+updatePHValue();
+// 初始调用一次以避免等待1秒才显示
+updateLuxValue();
+updateSpeedValue();
+updateESValue();
+
+</script>
+</html>

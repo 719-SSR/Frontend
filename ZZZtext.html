@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>动态更新折线图示例</title>
+  <!-- 引入SB Admin 2的CSS -->
+  <link href="css/sb-admin-2.min.css" rel="stylesheet">
+  <!-- 引入Font Awesome图标库 -->
+  <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <!-- 引入Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+  <style>
+    /* 图表容器样式 */
+    .chart-container {
+      width: 100%;
+      margin-bottom: 50px;
+    }
+    /* 保证canvas最大宽度100%，固定高度300px */
+    canvas {
+      max-width: 100%;
+      height: 300px;
+    }
+  </style>
+</head>
+<body id="page-top">
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+    <!-- Sidebar -->
+    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+        <div class="sidebar-brand-text mx-3">仪表板</div>
+      </a>
+      <hr class="sidebar-divider my-0">
+      <li class="nav-item active">
+        <a class="nav-link" href="index.html">
+          <i class="fas fa-fw fa-tachometer-alt"></i>
+          <span>首页</span>
+        </a>
+      </li>
+    </ul>
+    <!-- End Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+      <div id="content">
+        <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+          <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+            <i class="fa fa-bars"></i>
+          </button>
+          <ul class="navbar-nav ml-auto"></ul>
+        </nav>
+
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+          <h1 class="h3 mb-4 text-gray-800 text-center">动态更新折线图</h1>
+          <!-- 图表区域 -->
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                  <h6 class="m-0 font-weight-bold text-primary">销量数据（单位：件）</h6>
+                </div>
+                <div class="card-body">
+                  <div class="chart-container">
+                    <canvas id="lineChart"></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End Page Content -->
+      </div>
+      <!-- Footer -->
+      <footer class="sticky-footer bg-white">
+        <div class="container my-auto">
+          <div class="copyright text-center my-auto">
+            <span>© 2025 Your Company</span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    <!-- End Content Wrapper -->
+  </div>
+  <!-- End Page Wrapper -->
+
+  <!-- 引入必要的JavaScript库 -->
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+  <script src="js/sb-admin-2.min.js"></script>
+
+  <!-- 自定义脚本 -->
+  <script>
+    // 生成一个29到35之间的随机整数
+    function generateRandomValue() {
+      return Math.floor(Math.random() * (35 - 29 + 1)) + 29;
+    }
+
+    // 生成初始数据（长度为12，随机数在29到35之间）
+    function generateInitialData() {
+      var data = [];
+      for (var i = 0; i < 12; i++) {
+        data.push(generateRandomValue());
+      }
+      return data;
+    }
+
+    // 初始化X轴标签，初始为1到12
+    var labels = [];
+    for (var i = 1; i <= 12; i++) {
+      labels.push(i);
+    }
+
+    // 获取折线图的绘制上下文
+    var ctxLine = document.getElementById('lineChart').getContext('2d');
+
+    // 创建折线图
+    var lineChart = new Chart(ctxLine, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: '销量',
+          data: generateInitialData(),
+          borderColor: 'rgba(75, 192, 192, 1)',
+          tension: 0.4,  // 保持折线平滑
+          fill: false
+        }]
+      },
+      options: {
+        // 禁用y轴动画，但保留x轴动画
+        animations: {
+          x: { duration: 1000 },
+          y: { duration: 0 }
+        },
+        scales: {
+          y: {
+            min: 20,
+            max: 40
+          }
+        }
+      }
+    });
+
+    // 每隔3秒更新一次数据：左移一格、右侧添加新数据
+    setInterval(function() {
+      // 移除最左侧标签，并在末尾添加一个新标签（新标签为前一个标签+1）
+      lineChart.data.labels.shift();
+      lineChart.data.labels.push(lineChart.data.labels[lineChart.data.labels.length - 1] + 1);
+
+      // 移除最左侧数据，追加一个新的随机数（范围29~35）
+      lineChart.data.datasets[0].data.shift();
+      lineChart.data.datasets[0].data.push(generateRandomValue());
+
+      // 更新图表，动画效果中x轴平滑滑动，而y轴新数据瞬间显示
+      lineChart.update();
+    }, 3000);
+  </script>
+</body>
+</html>
