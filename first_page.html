@@ -2,6 +2,9 @@
 <html lang="en">
 
 <head>
+    <!-- 引入Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.0"></script>
 <style>
 
 </style>
@@ -575,7 +578,7 @@ var myAreaChart = new Chart(ctxLine, {
   data: {
     labels: labels,
     datasets: [{
-      label: '销量',
+      label: '水温',
       data: generateInitialData(),
       borderColor: 'rgba(75, 192, 192, 1)',
       tension: 0.4,
@@ -585,12 +588,33 @@ var myAreaChart = new Chart(ctxLine, {
   options: {
     animations: {
       x: { duration: 1000 },
-      y: { duration: 0 }
+      y: { duration: 0 },
+      plugins: {
+        zoom: {
+         zoom: {
+          wheel: {
+              enabled: true,       // 启用滚轮缩放
+          },
+          drag: {
+           enabled: true        // 启用拖拽缩放
+          },
+        mode: 'xy'             // 关键！同时启用 X/Y 轴缩放
+      },
+      pan: {
+        enabled: true,         // 启用平移
+        mode: 'xy'            // 同时允许 X/Y 轴平移
+         }
+       }
+      }
     },
     scales: {
       y: {
         min: 20,
-        max: 40
+        max: 40,
+        type: 'linear'
+      },
+      X: {
+        type: 'linear'
       }
     }
   }

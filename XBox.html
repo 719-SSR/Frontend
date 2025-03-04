@@ -244,79 +244,9 @@
     <script src="js/sb-admin-2.min.js"></script>
 
     <!-- 添加自定义脚本 -->
-    <script>
-        // 初始化折线图数据
-        var lineChart;
-        var initialData = [15, 16, 18, 20, 22, 24, 26, 28, 27, 25, 23, 20]; // 初始数据
-        var labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']; // X轴标签
-
-        // 初始化水温折线图
-        function initLineChart() {
-            var ctxLine = document.getElementById('lineChart').getContext('2d');
-            lineChart = new Chart(ctxLine, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: '水温',
-                        data: initialData, // 初始的数据
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        tension: 0.4, // 保持光滑的折线
-                        fill: false
-                    }]
-                },
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-        }
-
-        // 更新折线图数据
-        function updateLineChart() {
-            var currentData = lineChart.data.datasets[0].data;
-            var newDataPoint = Math.random() * (30 - 10) + 10; // 生成一个随机水温值
-            currentData.push(newDataPoint);
-
-            // 每次更新时，数据从右向左流动
-            if (currentData.length > 12) {
-                currentData.shift(); // 删除最左边的一个数据点
-            }
-
-            // 更新图表以显示最新数据
-            lineChart.update();
-        }
-
-        // 每帧更新一次数据，模拟流动效果
-        function animateLineChart() {
-            setInterval(updateLineChart, 150); // 设置每150毫秒更新一次数据
-        }
-
-        // 初始化所有图表
-        document.addEventListener('DOMContentLoaded', function () {
-            initLineChart(); // 初始化折线图
-            animateLineChart(); // 启动数据流动
-        });
-
-        // 饼状图
-        var ctxPie = document.getElementById('pieChart').getContext('2d');
-        var pieChart = new Chart(ctxPie, {
-            type: 'pie',
-            data: {
-                labels: ['储蓄', '支出', '投资'],
-                datasets: [{
-                    label: '钱数分配',
-                    data: [5000, 3000, 2000],
-                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
-                    hoverOffset: 40 // 增加突出效果，显著增加视觉效果
-                }]
-            }
-        });
-        // 获取所有需要操作的元素
-const elements = {
+<script>
+     // 获取所有需要操作的元素
+    const elements = {
     leftStick: document.getElementById('LeftStick'),
     rightStick: document.getElementById('RightStick'),
     dUp: document.querySelector('#DUp > path'),
@@ -610,7 +540,7 @@ function fetchJoystickData() {
 
 // 设置定时器，每隔1秒调用一次GraphQL查询
 setInterval(fetchJoystickData, 10); // 1000ms = 1秒
-    </script>
+</script>
 </body>
 
 </html>
