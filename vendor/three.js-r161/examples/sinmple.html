@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <meta charset="utf-8"/>
+    <meta charset="utf-8" />
 
     <title>Simple URDF Loading Example</title>
 
     <style>
-        html, body {
+        html,
+        body {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
@@ -31,7 +33,7 @@
     </script>
 
     <script type="module">
-		import * as THREE from 'three';
+        import * as THREE from 'three';
         import {
             WebGLRenderer,
             PerspectiveCamera,
@@ -47,11 +49,11 @@
             Box3,
             LoadingManager,
             MathUtils,
-			MeshStandardMaterial
+            MeshStandardMaterial
         } from 'three';
         import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
         import URDFLoader from 'three/addons/loaders/URDFLoader.js';
-		import { STLLoader } from 'three/addons/loaders/STLLoader.js';
+        import { STLLoader } from 'three/addons/loaders/STLLoader.js';
 
 
 
@@ -95,11 +97,10 @@
             controls.target.y = 1;
             controls.update();
 
-			loadSTLModel();
-
             // Load robot
             const manager = new LoadingManager();
             const loader = new URDFLoader(manager);
+
 
             loader.load('models/urdf3/claude.urdf', result => {
                 robot = result;
@@ -134,27 +135,6 @@
             window.addEventListener('resize', onResize);
         }
 
-		function loadSTLModel() {
-    const stlLoader = new STLLoader();
-
-    // 🟢 **修改 STL 文件路径**（确保路径正确）
-    stlLoader.load('models/urdf3/cone.stl', (geometry) => {
-        const material = new THREE.MeshStandardMaterial({ color: 0xAAAAAA });
-        const mesh = new THREE.Mesh(geometry, material);
-
-        mesh.position.set(0, 0, 0);  // 设置 STL 模型位置
-        mesh.scale.set(1, 1, 1);     // 设置 STL 模型大小
-        mesh.castShadow = true;
-        mesh.receiveShadow = true;
-
-        scene.add(mesh);
-        console.log("STL Model Loaded:", mesh);
-    }, undefined, function (error) {
-        console.error("STLLoader Error:", error);
-    });
-}
-
-
         function onResize() {
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.setPixelRatio(window.devicePixelRatio);
@@ -170,6 +150,8 @@
 
     </script>
 </head>
+
 <body>
 </body>
+
 </html>
