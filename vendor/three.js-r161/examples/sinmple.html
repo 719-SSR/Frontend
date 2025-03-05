@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta charset="utf-8"/>
+
+    <title>Simple URDF Loading Example</title>
+
+    <style>
+        html, body {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+    </style>
+
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "/build/three.module.js",
+                "three/addons/": "./jsm/"
+            }
+        }
+    </script>
+
+    <script>
+        var scene, camera, renderer, controls;
+        var robot;
+        var ccc = 333; // 确保变量 ccc 已定义
+    </script>
+
+    <script type="module">
+		import * as THREE from 'three';
+        import {
+            WebGLRenderer,
+            PerspectiveCamera,
+            Scene,
+            Mesh,
+            PlaneGeometry,
+            ShadowMaterial,
+            DirectionalLight,
+            PCFSoftShadowMap,
+            SRGBColorSpace,
+            Color,
+            AmbientLight,
+            Box3,
+            LoadingManager,
+            MathUtils,
+			MeshStandardMaterial
+        } from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        import URDFLoader from 'three/addons/loaders/URDFLoader.js';
+		import { STLLoader } from 'three/addons/loaders/STLLoader.js';
+
+
+
+        setTimeout(function () {
+            console.debug(111);
+            init();
+            render();
+        }, 1000);
+
+        function init() {
+            scene = new Scene();
+            scene.background = new Color(0x263238);
+
+            camera = new PerspectiveCamera();
+            camera.position.set(10, 10, 10);
+            camera.lookAt(0, 0, 0);
+
+            renderer = new WebGLRenderer({ antialias: true });
+            renderer.outputColorSpace = SRGBColorSpace; // 修正 outputEncoding
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = PCFSoftShadowMap;
+            document.body.appendChild(renderer.domElement);
+
+            const directionalLight = new DirectionalLight(0xffffff, 1.0);
+            directionalLight.castShadow = true;
+            directionalLight.shadow.mapSize.setScalar(1024);
+            directionalLight.position.set(5, 30, 5);
+            scene.add(directionalLight);
+
+            const ambientLight = new AmbientLight(0xffffff, 0.2);
+            scene.add(ambientLight);
+
+            const ground = new Mesh(new PlaneGeometry(), new ShadowMaterial({ opacity: 0.25 }));
+            ground.rotation.x = -Math.PI / 2;
+            ground.scale.setScalar(30);
+            ground.receiveShadow = true;
+            scene.add(ground);
+
+            controls = new OrbitControls(camera, renderer.domElement);
+            controls.minDistance = 4;
+            controls.target.y = 1;
+            controls.update();
+
+			loadSTLModel();
+
+            // Load robot
+            const manager = new LoadingManager();
+            const loader = new URDFLoader(manager);
+
+            loader.load('models/urdf3/claude.urdf', result => {
+                robot = result;
+                console.log("Robot loaded:", robot); // 确保 robot 成功加载
+            }, undefined, function (error) {
+                console.error("URDFLoader Error:", error);
+            });
+
+            // wait until all the geometry has loaded to add the model to the scene
+            manager.onLoad = () => {
+                if (!robot) {
+                    console.error("Robot model not loaded!");
+                    return;
+                }
+
+                robot.rotation.x = Math.PI / 2;
+                robot.rotation.x *= (-1);
+                robot.traverse(c => {
+                    c.castShadow = true;
+                });
+
+                robot.updateMatrixWorld(true);
+
+                const bb = new Box3();
+                bb.setFromObject(robot);
+
+                robot.position.y -= bb.min.y;
+                scene.add(robot);
+            };
+
+            onResize();
+            window.addEventListener('resize', onResize);
+        }
+
+		function loadSTLModel() {
+    const stlLoader = new STLLoader();
+
+    // 🟢 **修改 STL 文件路径**（确保路径正确）
+    stlLoader.load('models/urdf3/cone.stl', (geometry) => {
+        const material = new THREE.MeshStandardMaterial({ color: 0xAAAAAA });
+        const mesh = new THREE.Mesh(geometry, material);
+
+        mesh.position.set(0, 0, 0);  // 设置 STL 模型位置
+        mesh.scale.set(1, 1, 1);     // 设置 STL 模型大小
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+
+        scene.add(mesh);
+        console.log("STL Model Loaded:", mesh);
+    }, undefined, function (error) {
+        console.error("STLLoader Error:", error);
+    });
+}
+
+
+        function onResize() {
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+        }
+
+        function render() {
+            requestAnimationFrame(render);
+            renderer.render(scene, camera);
+        }
+
+    </script>
+</head>
+<body>
+</body>
+</html>

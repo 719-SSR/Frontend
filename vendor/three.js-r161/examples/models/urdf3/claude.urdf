@@ -1,0 +1,316 @@
+<?xml version="1.0"?>
+<robot name="underwater_robot">
+  <!-- 材质定义 -->
+  <material name="yellow">
+    <color rgba="0.8 0.8 0.294118 1.0"/>
+  </material>
+  
+  <material name="black">
+    <color rgba="0.117647 0.117647 0.117647 1.0"/>
+  </material>
+  
+  <material name="orange">
+    <color rgba="0.8 0.423529 0.0509804 1.0"/>
+  </material>
+  
+  <material name="transparent">
+    <color rgba="1.0 1.0 1.0 0.3"/>
+  </material>
+  
+  <material name="white">
+    <color rgba="0.8 0.8 0.8 1.0"/>
+  </material>
+
+  <!-- 主体 -->
+  <link name="base_link">
+    <inertial>
+      <mass value="363.17"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="20.0" ixy="0" ixz="0" iyy="20.0" iyz="0" izz="20.0"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.34" length="1.0"/>
+      </geometry>
+      <material name="yellow"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.34" length="1.0"/>
+      </geometry>
+    </collision>
+  </link>
+  
+  <!-- 透明圆顶 -->
+  <link name="dome">
+    <inertial>
+      <mass value="10.0"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="1.0" ixy="0" ixz="0" iyy="1.0" iyz="0" izz="1.0"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <sphere radius="0.34"/>
+      </geometry>
+      <material name="transparent"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <sphere radius="0.34"/>
+      </geometry>
+    </collision>
+  </link>
+  
+  <!-- 上锥体 - 正确使用圆锥体几何形状 -->
+  <link name="cone">
+    <inertial>
+      <mass value="5.0"/>
+      <origin xyz="0 0 0.15" rpy="0 0 0"/>
+      <inertia ixx="0.1" ixy="0" ixz="0" iyy="0.1" iyz="0" izz="0.05"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <!-- 使用mesh表示圆锥体 -->
+        <!-- <mesh filename="file://cone.stl"/> -->
+        <cone radius="0.34" length="0.3"/>
+        <!-- 如果没有mesh文件，可以使用以下替代方案：
+        在URDF中没有原生的圆锥体支持，所以提供stl/dae文件或使用以下注释中的替代表示 -->
+      </geometry>
+      <material name="orange"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.15" rpy="0 0 0"/>
+      <geometry>
+        <cone radius="0.34" length="0.3"/>
+      </geometry>
+    </collision>
+  </link>
+  
+  <!-- 左侧推进器 -->
+  <link name="left_thruster">
+    <inertial>
+      <mass value="2.0"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.15" length="0.1"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.15" length="0.1"/>
+      </geometry>
+    </collision>
+  </link>
+  
+  <!-- 右侧推进器 -->
+  <link name="right_thruster">
+    <inertial>
+      <mass value="2.0"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.15" length="0.1"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.15" length="0.1"/>
+      </geometry>
+    </collision>
+  </link>
+  
+  <!-- 顶部推进器 - 改进版万向节实现 -->
+  <!-- 用于实现万向节的中间链接 -->
+  <link name="end_joint1_link">
+    <inertial>
+      <mass value="0.1"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/>
+    </inertial>
+  </link>
+  
+  <link name="end_joint2_link">
+    <inertial>
+      <mass value="0.1"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/>
+    </inertial>
+  </link>
+  
+  <!-- 末端执行器（推进器） -->
+  <link name="end_thruster">
+    <inertial>
+      <mass value="2.0"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.15" length="0.1"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.15" length="0.1"/>
+      </geometry>
+    </collision>
+  </link>
+  
+  <!-- 连接圆顶到主体 -->
+  <joint name="dome_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="dome"/>
+    <origin xyz="0 0 -0.5" rpy="0 0 0"/>
+  </joint>
+  
+  <!-- 连接锥体到主体 -->
+  <joint name="cone_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="cone"/>
+    <origin xyz="0 0 0.5" rpy="0 0 0"/>
+  </joint>
+  
+  <!-- 左推进器铰链关节 -->
+  <joint name="left_thruster_joint" type="revolute">
+    <parent link="base_link"/>
+    <child link="left_thruster"/>
+    <origin xyz="-0.49 0 0" rpy="0 0 0"/>
+    <axis xyz="1 0 0"/>
+    <limit lower="-3.14159" upper="3.14159" effort="100" velocity="10"/>
+    <dynamics damping="0.1" friction="0.1"/>
+  </joint>
+  
+  <!-- 右推进器铰链关节 -->
+  <joint name="right_thruster_joint" type="revolute">
+    <parent link="base_link"/>
+    <child link="right_thruster"/>
+    <origin xyz="0.49 0 0" rpy="0 0 0"/>
+    <axis xyz="1 0 0"/>
+    <limit lower="-3.14159" upper="3.14159" effort="100" velocity="10"/>
+    <dynamics damping="0.1" friction="0.1"/>
+  </joint>
+  
+  <!-- 万向节实现 - 使用3个串联旋转关节 -->
+  <!-- 第一个关节，绕X轴旋转 -->
+  <joint name="end_joint1" type="revolute">
+    <parent link="base_link"/>
+    <child link="end_joint1_link"/>
+    <origin xyz="0 0 0.85" rpy="0 0 0"/> <!-- raw表示左右转动 -->>
+    <axis xyz="1 0 0"/>
+    <limit lower="-3.14159" upper="3.14159" effort="100" velocity="10"/>
+    <dynamics damping="0.1" friction="0.1"/>
+  </joint>
+  
+  <!-- 第二个关节，绕Y轴旋转 -->
+  <joint name="end_joint2" type="revolute">
+    <parent link="end_joint1_link"/>
+    <child link="end_joint2_link"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/> <!-- pitch表示左右转动 -->
+    <axis xyz="0 1 0"/>
+    <limit lower="-1.5708" upper="1.5708" effort="100" velocity="10"/>
+    <dynamics damping="0.1" friction="0.1"/>
+  </joint>
+  
+  <!-- 第三个关节，绕Z轴旋转 -->
+  <joint name="end_joint3" type="revolute">
+    <parent link="end_joint2_link"/>
+    <child link="end_thruster"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="-3.14159" upper="3.14159" effort="100" velocity="10"/>
+    <dynamics damping="0.1" friction="0.1"/>
+  </joint>
+
+  <!-- 传感器 -->
+  <!-- <gazebo>
+    <plugin name="gps_controller" filename="libhector_gazebo_ros_gps.so">
+      <bodyName>base_link</bodyName>
+      <frameId>gps_link</frameId>
+      <topicName>/gps/fix</topicName>
+      <updateRate>10.0</updateRate>
+    </plugin>
+    
+    <plugin name="imu_controller" filename="libhector_gazebo_ros_imu.so">
+      <bodyName>base_link</bodyName>
+      <frameId>base_link</frameId>
+      <topicName>/imu/data</topicName>
+      <updateRate>10.0</updateRate>
+    </plugin>
+  </gazebo> -->
+  
+  <!-- 电机执行器 -->
+  <transmission name="left_motor_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="left_thruster_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="left_motor">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="right_motor_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="right_thruster_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="right_motor">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <!-- 万向节三个电机的传动系统 -->
+  <transmission name="end_motor_trans1">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="end_joint1">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="end_servo_motor_1">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="end_motor_trans2">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="end_joint2">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="end_servo_motor_2">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="end_motor_trans3">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="end_joint3">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="end_servo_motor_3">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+</robot>
