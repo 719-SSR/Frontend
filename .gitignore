@@ -1,0 +1,62 @@
+# Node.js 依赖文件
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+bun.lockb
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# 构建生成的文件（前端打包输出）
+dist/
+build/
+public/
+.next/
+out/
+.storybook/
+
+# TypeScript 相关
+*.tsbuildinfo
+*.tscache
+*.ts-node/
+
+# Vue/Nuxt 相关
+.nuxt/
+.vite/
+.vscode/
+*.log
+
+# Next.js 相关
+.next/
+out/
+
+# Angular 相关
+.angular/
+.angular-cache/
+
+# Svelte 相关
+.svelte-kit/
+
+# React 相关
+.env.local
+.env.development.local
+.env.production.local
+.env.test.local
+
+# VS Code/IDE 相关
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# 临时文件
+*.log
+*.bak
+.DS_Store
+Thumbs.db
+
+# Jest/Testing 相关
+coverage/
+.nyc_output/
