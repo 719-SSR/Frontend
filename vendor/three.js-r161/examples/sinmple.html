@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum=1, user-scalable=no">
   <meta charset="utf-8" />
   <title>URDF 加载示例：关节控制与船体翻转</title>
   <style>
@@ -13,15 +13,36 @@
       padding: 0;
       overflow: hidden;
     }
+    /* 更新按钮样式：半透明、圆形 */
+    #myButton {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 10000;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      border: none;
+      background-color: rgba(0, 123, 255, 0.3); /* 半透明蓝色 */
+      color: white;
+      font-size: 20px;
+      cursor: pointer;
+      outline: none;
+    }
+    #firstPageBtn:hover {
+      background-color: rgba(0, 123, 255, 0.8);
+    }
   </style>
 
   <!-- 引入 dat.GUI -->
   <script src="https://cdn.jsdelivr.net/npm/dat.gui@0.7.9/build/dat.gui.min.js"></script>
+  <!-- 引入 socket.io 客户端库（后端会自动提供，或者你也可以使用 CDN 链接） -->
+  <script src="https://cdn.socket.io/4.5.0/socket.io.min.js"></script>
 
   <script type="importmap">
     {
       "imports": {
-        "three": "/build/three.module.js",
+        "three": "../build/three.module.js",
         "three/addons/": "./jsm/"
       }
     }
@@ -137,18 +158,12 @@
         });
         robot.updateMatrixWorld(true);
 
-        // ---------------------------
-        // 方法一：根据包围盒中心调整位置
-        // ---------------------------
         // 计算包围盒及中心点
-        const bb = new Box3().setFromObject(robot);
+        const bb = new THREE.Box3().setFromObject(robot);
         const center = bb.getCenter(new THREE.Vector3());
-        // 计算模型高度
         const height = bb.max.y - bb.min.y;
-        // 将机器人模型平移，使其几何中心与 shipGroup 原点重合
         robot.position.sub(center);
-        // ---------------------------
-        
+
         // 创建父级组，并将机器人添加进来
         shipGroup = new THREE.Group();
         shipGroup.add(robot);
@@ -156,7 +171,7 @@
         shipGroup.position.y = height / 2;
         scene.add(shipGroup);
 
-        // 添加船体旋转控制面板（yaw, pitch, roll）
+        // 船体旋转控制面板（yaw, pitch, roll）
         const hullRotation = { yaw: 0, pitch: 0, roll: 0 };
         const hullFolder = gui.addFolder("Hull Rotation");
         hullFolder.add(hullRotation, 'yaw', -180, 180, 1)
@@ -169,15 +184,14 @@
           .onChange(val => {
             shipGroup.rotation.x = THREE.MathUtils.degToRad(val);
           });
-        
-          hullFolder.add(hullRotation, 'roll', -180, 180, 1)
+        hullFolder.add(hullRotation, 'roll', -180, 180, 1)
           .name("Roll")
           .onChange(val => {
             shipGroup.rotation.y = THREE.MathUtils.degToRad(val);
           });
         hullFolder.open();
 
-        // 创建关节控制面板（保持原有关节控制功能）
+        // 关节控制面板
         createJointGUI();
       };
 
@@ -204,18 +218,14 @@
       });
     }
 
-    // 创建关节控制面板
     function createJointGUI() {
       if (!robot || !robot.joints) return;
       const jointsFolder = gui.addFolder("Joint Controls");
 
       Object.keys(robot.joints).forEach(jointName => {
         const jointObj = robot.joints[jointName];
-
-        // 只为 revolute 或 continuous 类型的关节添加控制（以度为单位）
         if (jointObj.jointType === 'revolute' || jointObj.jointType === 'continuous') {
           jointGUI[jointName] = { angleDeg: 0 };
-
           jointsFolder.add(jointGUI[jointName], 'angleDeg', -180, 180, 1)
             .name(jointName)
             .onChange(val => {
@@ -240,10 +250,28 @@
       requestAnimationFrame(render);
       renderer.render(scene, camera);
     }
+
+    // ----------------------------
+    // socket.io 客户端逻辑
+    // ----------------------------
+    // 连接到后端 socket.io 服务（注意：这里使用相对路径，前提是前后端在同一服务下）
+    const socket = io();
+    socket.on('rotationUpdate', data => {
+      // data 中包含 yaw, pitch, roll（单位：度）
+      if (shipGroup) {
+        shipGroup.rotation.z = THREE.MathUtils.degToRad(data.yaw);   // yaw 对应 Z 轴旋转
+        shipGroup.rotation.x = THREE.MathUtils.degToRad(data.pitch); // pitch 对应 X 轴旋转
+        shipGroup.rotation.y = THREE.MathUtils.degToRad(data.roll);  // roll 对应 Y 轴旋转
+      }
+    });
   </script>
 </head>
 
 <body>
+  <!-- 添加按钮，点击后跳转到 tables.html -->
+  <button id="myButton" onclick="window.location.href='../../../tables.html'">
+    &lt;
+  </button>
 </body>
 
 </html>
