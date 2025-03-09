@@ -592,6 +592,8 @@ var myAreaChart = new Chart(ctxLine, {
     }]
   },
   options: {
+    responsive: true,
+    maintainAspectRatio: false,
     animations: {
       x: { duration: 1000 },
       y: { duration: 0 },
@@ -619,7 +621,7 @@ var myAreaChart = new Chart(ctxLine, {
         max: 40,
         type: 'linear'
       },
-      X: {
+      x: {
         type: 'linear'
       }
     }
