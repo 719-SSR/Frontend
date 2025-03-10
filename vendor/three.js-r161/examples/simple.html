@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum=1, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
   <meta charset="utf-8" />
   <title>URDF 加载示例：关节控制与船体翻转</title>
   <style>
@@ -172,29 +172,29 @@
         scene.add(shipGroup);
 
         // 船体旋转控制面板（yaw, pitch, roll）
-        const hullRotation = { yaw: 0, pitch: 0, roll: 0 };
-        const hullFolder = gui.addFolder("Hull Rotation");
-        hullFolder.add(hullRotation, 'yaw', -180, 180, 1)
-          .name("Yaw")
-          .onChange(val => {
-            shipGroup.rotation.z = THREE.MathUtils.degToRad(val);
-          });
-        hullFolder.add(hullRotation, 'pitch', -180, 180, 1)
-          .name("Pitch")
-          .onChange(val => {
-            shipGroup.rotation.x = THREE.MathUtils.degToRad(val);
-          });
-        hullFolder.add(hullRotation, 'roll', -180, 180, 1)
-          .name("Roll")
-          .onChange(val => {
-            shipGroup.rotation.y = THREE.MathUtils.degToRad(val);
-          });
-        hullFolder.open();
+        // const hullRotation = { yaw: 0, pitch: 0, roll: 0 };
+        // const hullFolder = gui.addFolder("Hull Rotation");
+        // hullFolder.add(hullRotation, 'yaw', -180, 180, 1)
+        //   .name("Yaw")
+        //   .onChange(val => {
+        //     shipGroup.rotation.z = THREE.MathUtils.degToRad(val);
+        //   });
+        // hullFolder.add(hullRotation, 'pitch', -180, 180, 1)
+        //   .name("Pitch")
+        //   .onChange(val => {
+        //     shipGroup.rotation.x = THREE.MathUtils.degToRad(val);
+        //   });
+        // hullFolder.add(hullRotation, 'roll', -180, 180, 1)
+        //   .name("Roll")
+        //   .onChange(val => {
+        //     shipGroup.rotation.y = THREE.MathUtils.degToRad(val);
+        //   });
+        // hullFolder.open();
 
         // 关节控制面板
-        createJointGUI();
-      };
+        // createJointGUI();
 
+      };
       onResize();
       window.addEventListener('resize', onResize);
     }
@@ -250,20 +250,64 @@
       requestAnimationFrame(render);
       renderer.render(scene, camera);
     }
+		
+		function setJointValue(left_thruster, right_thruster, end_1, end_2, end_3) {
+			const left_thruster_joint = robot.joints["left_thruster_joint"];
+			const right_thruster_joint = robot.joints["right_thruster_joint"];
+			const end_joint1 = robot.joints["end_joint1"];
+			const end_joint2 = robot.joints["end_joint2"];
+			const end_joint3 = robot.joints["end_joint3"];
+			left_thruster = THREE.MathUtils.degToRad(left_thruster);
+			right_thruster = THREE.MathUtils.degToRad(right_thruster);
 
-    // ----------------------------
-    // socket.io 客户端逻辑
-    // ----------------------------
-    // 连接到后端 socket.io 服务（注意：这里使用相对路径，前提是前后端在同一服务下）
-    const socket = io();
-    socket.on('rotationUpdate', data => {
-      // data 中包含 yaw, pitch, roll（单位：度）
-      if (shipGroup) {
-        shipGroup.rotation.z = THREE.MathUtils.degToRad(data.yaw);   // yaw 对应 Z 轴旋转
-        shipGroup.rotation.x = THREE.MathUtils.degToRad(data.pitch); // pitch 对应 X 轴旋转
-        shipGroup.rotation.y = THREE.MathUtils.degToRad(data.roll);  // roll 对应 Y 轴旋转
-      }
+			end_1 = THREE.MathUtils.degToRad(end_1);
+			end_2 = THREE.MathUtils.degToRad(end_2);
+			end_3 = THREE.MathUtils.degToRad(end_3);
+
+			left_thruster_joint.setJointValue(left_thruster);
+			right_thruster_joint.setJointValue(right_thruster);
+			end_joint1.setJointValue(end_1);
+			end_joint2.setJointValue(end_2);
+			end_joint3.setJointValue(end_3);
+		}
+
+		function setAltitudeValue(yaw, pitch, roll) {
+			yaw = THREE.MathUtils.degToRad(yaw);
+			pitch = THREE.MathUtils.degToRad(pitch);
+			roll = THREE.MathUtils.degToRad(roll);
+
+			shipGroup.position.z = yaw;
+			shipGroup.position.x = pitch;
+			shipGroup.position.y = roll;
+		}
+
+
+const GET_MODEL_DATA= `
+  query {
+    
+}
+`;
+
+function fetchModelData() {
+    fetch('http://localhost:5000/graphql', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            query: GET_MODEL_DATA,
+        }),
+    })
+    .then(response => response.json())
+    .then(data => {
+			
+		})
+    .catch(error => {
+        console.error('Error fetching model data:', error);
     });
+}
+
+		setInterval(fetchModelData, 1000);
   </script>
 </head>
 
