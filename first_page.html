@@ -381,7 +381,7 @@
                                 <div class="card-body">
                                     <div class="text-center">
                                         <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;"
-                                            src="img/undraw_posting_photo.svg" alt="...">
+                                            src="img/picture.png" alt="...">
                                     </div>
                                     <p>Add some quality, svg illustrations to your project courtesy of <a
                                             target="_blank" rel="nofollow" href="https://undraw.co/">unDraw</a>, a
@@ -470,8 +470,8 @@
     <script src="vendor/chart.js/Chart.min.js"></script>
 
     <!-- Page level custom scripts -->
-    <script src="js/demo/chart-area-demo.js"></script>
-    <script src="js/demo/chart-pie-demo.js"></script>
+    <!-- <script src="js/demo/chart-area-demo.js"></script> -->
+    <!-- <script src="js/demo/chart-pie-demo.js"></script> -->
 
 </body>
 <script>
@@ -692,45 +692,45 @@ function updateProgressBar(yaw, pitch, row) {
 }
 
 // 使用fetch发送GraphQL请求
-function fetchJoystickData() {
-    fetch('http://localhost:5000/graphql', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            query: GET_JOYSTICK_DATA,
-        }),
-    })
-    .then(response => response.json())
-    .then(data => {
-        const joystickData = data.data.joystick;
-        if (!joystickData) {
-            console.log('Joystick data not available');
-            return;
-        }
-
-        // 获取YAW、PITCH、ROW的数据
-        const yaw = joystickData.YOW; // 假设返回的数据格式与此类似
-        const pitch = joystickData.PITCH;
-        const row = joystickData.ROW;
-
-        // 更新进度条
-        updateProgressBar(yaw, pitch, row);
-        updateEulerAngles(yaw, pitch, row);
-    })
-    .catch(error => {
-        console.error('Error fetching joystick data:', error);
-    });
-}
-
-// 设置定时器，每隔1秒获取一次数据
-setInterval(fetchJoystickData, 1000);
+// function fetchJoystickData() {
+//     fetch('http://localhost:5000/graphql', {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/json',
+//         },
+//         body: JSON.stringify({
+//             query: GET_JOYSTICK_DATA,
+//         }),
+//     })
+//     .then(response => response.json())
+//     .then(data => {
+//         const joystickData = data.data.joystick;
+//         if (!joystickData) {
+//             console.log('Joystick data not available');
+//             return;
+//         }
+//
+//         // 获取YAW、PITCH、ROW的数据
+//         const yaw = joystickData.YOW; // 假设返回的数据格式与此类似
+//         const pitch = joystickData.PITCH;
+//         const row = joystickData.ROW;
+//
+//         // 更新进度条
+//         updateProgressBar(yaw, pitch, row);
+//         updateEulerAngles(yaw, pitch, row);
+//     })
+//     .catch(error => {
+//         console.error('Error fetching joystick data:', error);
+//     });
+// }
+//
+// // 设置定时器，每隔1秒获取一次数据
+// setInterval(fetchJoystickData, 1000);
 
 
 
 // 设置定时器，每隔1秒调用一次GraphQL查询
-setInterval(fetchJoystickData, 10); // 1000ms = 1秒
+// setInterval(fetchJoystickData, 10); // 1000ms = 1秒
 
 // 设置定时器，每秒更新一次PH值
 setInterval(updatePHValue, 1000);
