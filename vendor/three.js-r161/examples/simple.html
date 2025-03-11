@@ -13,6 +13,7 @@
       padding: 0;
       overflow: hidden;
     }
+
     /* 更新按钮样式：半透明、圆形 */
     #myButton {
       position: absolute;
@@ -23,12 +24,14 @@
       height: 50px;
       border-radius: 50%;
       border: none;
-      background-color: rgba(0, 123, 255, 0.3); /* 半透明蓝色 */
+      background-color: rgba(0, 123, 255, 0.3);
+      /* 半透明蓝色 */
       color: white;
       font-size: 20px;
       cursor: pointer;
       outline: none;
     }
+
     #firstPageBtn:hover {
       background-color: rgba(0, 123, 255, 0.8);
     }
@@ -250,85 +253,84 @@
       requestAnimationFrame(render);
       renderer.render(scene, camera);
     }
-		
-		function setJointValue(left_thruster, right_thruster, end_1, end_2, end_3) {
-			const left_thruster_joint = robot.joints["left_thruster_joint"];
-			const right_thruster_joint = robot.joints["right_thruster_joint"];
-			const end_joint1 = robot.joints["end_joint1"];
-			const end_joint2 = robot.joints["end_joint2"];
-			const end_joint3 = robot.joints["end_joint3"];
-			left_thruster = THREE.MathUtils.degToRad(left_thruster);
-			right_thruster = THREE.MathUtils.degToRad(right_thruster);
 
-			end_1 = THREE.MathUtils.degToRad(end_1);
-			end_2 = THREE.MathUtils.degToRad(end_2);
-			end_3 = THREE.MathUtils.degToRad(end_3);
+    function setJointValue(left_thruster, right_thruster, end_1, end_2, end_3) {
+      const left_thruster_joint = robot.joints["left_thruster_joint"];
+      const right_thruster_joint = robot.joints["right_thruster_joint"];
+      const end_joint1 = robot.joints["end_joint1"];
+      const end_joint2 = robot.joints["end_joint2"];
+      const end_joint3 = robot.joints["end_joint3"];
+      left_thruster = THREE.MathUtils.degToRad(left_thruster);
+      right_thruster = THREE.MathUtils.degToRad(right_thruster);
 
-			left_thruster_joint.setJointValue(left_thruster);
-			right_thruster_joint.setJointValue(right_thruster);
-			end_joint1.setJointValue(end_1);
-			end_joint2.setJointValue(end_2);
-			end_joint3.setJointValue(end_3);
-		}
+      end_1 = THREE.MathUtils.degToRad(end_1);
+      end_2 = THREE.MathUtils.degToRad(end_2);
+      end_3 = THREE.MathUtils.degToRad(end_3);
 
-		function setAltitudeValue(yaw, pitch, roll) {
-			yaw = THREE.MathUtils.degToRad(yaw);
-			pitch = THREE.MathUtils.degToRad(pitch);
-			roll = THREE.MathUtils.degToRad(roll);
+      left_thruster_joint.setJointValue(left_thruster);
+      right_thruster_joint.setJointValue(right_thruster);
+      end_joint1.setJointValue(end_1);
+      end_joint2.setJointValue(end_2);
+      end_joint3.setJointValue(end_3);
+    }
 
-			shipGroup.position.z = yaw;
-			shipGroup.position.x = pitch;
-			shipGroup.position.y = roll;
-		}
+    function setAltitudeValue(yaw, pitch, roll) {
+      yaw = THREE.MathUtils.degToRad(yaw);
+      pitch = THREE.MathUtils.degToRad(pitch);
+      roll = THREE.MathUtils.degToRad(roll);
+
+      shipGroup.position.z = yaw;
+      shipGroup.position.x = pitch;
+      shipGroup.position.y = roll;
+    }
 
 
-const GET_MODEL_DATA= `
-  query {
-joint {
-available
-left_thruster_joint
-right_thruster_joint
-end_joint1
-end_joint2
-}
-altitude {
-available
-yaw
-pitch
-roll
-}
+    const GET_MODEL_DATA = `
+query {
+	joint {
+		available
+		leftThrusterJoint
+		rightThrusterJoint
+		endJoint1
+		endJoint2
+	}
+	altitude {
+		available
+		yaw
+		pitch
+		roll
+	}
 }
 `;
 
-function fetchModelData() {
-    fetch('http://localhost:5000/graphql', {
+    function fetchModelData() {
+      fetch('http://localhost:5000/graphql', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            query: GET_MODEL_DATA,
+          query: GET_MODEL_DATA,
         }),
-    })
-    .then(response => response.json())
-    .then(data => {
-			const jointData = data.data.joint;
-			const altitudeData = data.data.altitude;
-			if (!modelData.available) {
-				console.log('modelData not available')
-				return;
-			}
-			else {
-						setJointValue(jointData.left_thruster_joint, jointData.right_thruster_joint, 0, jointData.end_joint2, jointData.end_joint3);
-						setAltitudeValue(altitudeData.yaw, altitudeData.pitch, altitudeData.roll);
-					}
-		})
-    .catch(error => {
-        console.error('Error fetching model data:', error);
-    });
-}
-
-		setInterval(fetchModelData, 10);
+      })
+        .then(response => response.json())
+        .then(data => {
+          const jointData = data.data.joint;
+          const altitudeData = data.data.altitude;
+          if (!(jointData.available || altitudeData.available)) {
+            console.error('modelData not available')
+            return;
+          }
+          else {
+            setJointValue(jointData.leftThrusterJoint, jointData.rightThrusterJoint, jointData.end_joint1, jointData.end_joint2, 0);
+            setAltitudeValue(altitudeData.yaw, altitudeData.pitch, altitudeData.roll);
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching model data:', error);
+        });
+    }
+    setInterval(fetchModelData, 10);
   </script>
 </head>
 
