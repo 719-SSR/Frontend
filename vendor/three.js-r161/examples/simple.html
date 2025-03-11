@@ -284,7 +284,19 @@
 
 const GET_MODEL_DATA= `
   query {
-    
+joint {
+available
+left_thruster_joint
+right_thruster_joint
+end_joint1
+end_joint2
+}
+altitude {
+available
+yaw
+pitch
+roll
+}
 }
 `;
 
@@ -300,14 +312,23 @@ function fetchModelData() {
     })
     .then(response => response.json())
     .then(data => {
-			
+			const jointData = data.data.joint;
+			const altitudeData = data.data.altitude;
+			if (!modelData.available) {
+				console.log('modelData not available')
+				return;
+			}
+			else {
+						setJointValue(jointData.left_thruster_joint, jointData.right_thruster_joint, 0, jointData.end_joint2, jointData.end_joint3);
+						setAltitudeValue(altitudeData.yaw, altitudeData.pitch, altitudeData.roll);
+					}
 		})
     .catch(error => {
         console.error('Error fetching model data:', error);
     });
 }
 
-		setInterval(fetchModelData, 1000);
+		setInterval(fetchModelData, 10);
   </script>
 </head>
 
