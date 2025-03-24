@@ -1,304 +1,104 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <title>仪表板 - URDF 加载示例：关节控制与船体翻转</title>
-  
-  <!-- SB Admin 2 CSS -->
-  <link href="css/sb-admin-2.min.css" rel="stylesheet">
-  <!-- Font Awesome 图标库 -->
-  <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-  <!-- Chart.js -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>SB Admin 2 - Dashboard with Camera</title>
+  <!-- Custom fonts for this template-->
+  <link href="../../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+  <!-- Custom styles for this template-->
+  <link href="../../css/sb-admin-2.min.css" rel="stylesheet">
+  <!-- Toastr CSS for通知弹窗 -->
+  <link href="../../vendor/toastr/toastr.min.css" rel="stylesheet">
+  <!-- Chart.js及其插件 -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
-
-  <style>
-    /* code1 中的基础样式 */
-    html,
-    body {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-    }
-  </style>
-
-  <!-- 引入 dat.GUI -->
-  <script src="https://cdn.jsdelivr.net/npm/dat.gui@0.7.9/build/dat.gui.min.js"></script>
-
-  <!-- importmap 配置 -->
-  <script type="importmap">
-    {
-      "imports": {
-        "three": "/build/three.module.js",
-        "three/addons/": "./jsm/"
-      }
-    }
-  </script>
-
-  <script>
-    // 全局变量声明
-    var scene, camera, renderer, controls;
-    var robot;           // URDF 加载后的机器人模型
-    var shipGroup;       // 用于包裹机器人模型，实现船体整体旋转
-    var gui;             // 全局 dat.GUI 实例
-    var jointGUI = {};   // 存储各关节控制对象
-  </script>
-
-  <!-- code1：Three.js + URDF 加载脚本 -->
-  <script type="module">
-    import * as THREE from 'three';
-    import {
-      WebGLRenderer,
-      PerspectiveCamera,
-      Scene,
-      Mesh,
-      PlaneGeometry,
-      ShadowMaterial,
-      DirectionalLight,
-      PCFSoftShadowMap,
-      SRGBColorSpace,
-      Color,
-      AmbientLight,
-      Box3,
-      LoadingManager,
-      MeshStandardMaterial
-    } from 'three';
-    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-    import URDFLoader from 'three/addons/loaders/URDFLoader.js';
-    import { STLLoader } from 'three/addons/loaders/STLLoader.js';
-
-    // 延时1秒后初始化（确保所有依赖加载完毕）
-    setTimeout(function () {
-      console.debug(111);
-      init();
-      render();
-    }, 1000);
-
-    function init() {
-      // 创建场景与相机
-      scene = new Scene();
-      scene.background = new Color(0x263238);
-
-      camera = new PerspectiveCamera();
-      camera.position.set(10, 10, 10);
-      camera.lookAt(0, 0, 0);
-
-      // 初始化渲染器
-      renderer = new WebGLRenderer({ antialias: true });
-      renderer.outputColorSpace = SRGBColorSpace;
-      renderer.shadowMap.enabled = true;
-      renderer.shadowMap.type = PCFSoftShadowMap;
-      document.body.appendChild(renderer.domElement);
-
-      // 添加定向光与阴影
-      const directionalLight = new DirectionalLight(0xffffff, 1.0);
-      directionalLight.castShadow = true;
-      directionalLight.shadow.mapSize.setScalar(1024);
-      directionalLight.position.set(5, 30, 5);
-      scene.add(directionalLight);
-
-      // 添加环境光
-      const ambientLight = new AmbientLight(0xffffff, 0.2);
-      scene.add(ambientLight);
-
-      // 创建地面
-      const ground = new Mesh(new PlaneGeometry(), new ShadowMaterial({ opacity: 0.25 }));
-      ground.rotation.x = -Math.PI / 2;
-      ground.scale.setScalar(30);
-      ground.receiveShadow = true;
-      scene.add(ground);
-
-      // 设置 OrbitControls
-      controls = new OrbitControls(camera, renderer.domElement);
-      controls.minDistance = 4;
-      controls.target.y = 1;
-      controls.update();
-
-      // 全局 dat.GUI 实例，用于添加关节控制与船体旋转
-      gui = new dat.GUI({ width: 300 });
-
-      // 如需加载 STL 模型，可调用下面函数
-      // loadSTLModel();
-
-      // 加载 URDF 机器人模型
-      const manager = new LoadingManager();
-      const loader = new URDFLoader(manager);
-
-      loader.load('models/urdf3/claude.urdf', result => {
-        robot = result;
-        console.log("Robot loaded:", robot);
-      }, undefined, function (error) {
-        console.error("URDFLoader Error:", error);
-      });
-
-      // 当所有几何体加载完毕后执行
-      manager.onLoad = () => {
-        if (!robot) {
-          console.error("Robot model not loaded!");
-          return;
-        }
-
-        // 调整机器人的初始姿态
-        robot.rotation.x = Math.PI / 2;
-        robot.rotation.x *= (-1);
-        robot.traverse(c => {
-          c.castShadow = true;
-        });
-        robot.updateMatrixWorld(true);
-
-        // ---------------------------
-        // 方法一：根据包围盒中心调整位置
-        // ---------------------------
-        // 计算包围盒及中心点
-        const bb = new Box3().setFromObject(robot);
-        const center = bb.getCenter(new THREE.Vector3());
-        // 计算模型高度
-        const height = bb.max.y - bb.min.y;
-        // 将机器人模型平移，使其几何中心与 shipGroup 原点重合
-        robot.position.sub(center);
-        // ---------------------------
-        
-        // 创建父级组，并将机器人添加进来
-        shipGroup = new THREE.Group();
-        shipGroup.add(robot);
-        // 将 shipGroup 向上平移，使得机器人底部位于地面（y = 0）
-        shipGroup.position.y = height / 2;
-        scene.add(shipGroup);
-
-        // 添加船体旋转控制面板（yaw, pitch, roll）
-        const hullRotation = { yaw: 0, pitch: 0, roll: 0 };
-        const hullFolder = gui.addFolder("Hull Rotation");
-        hullFolder.add(hullRotation, 'yaw', -180, 180, 1)
-          .name("Yaw")
-          .onChange(val => {
-            shipGroup.rotation.z = THREE.MathUtils.degToRad(val);
-          });
-        hullFolder.add(hullRotation, 'pitch', -180, 180, 1)
-          .name("Pitch")
-          .onChange(val => {
-            shipGroup.rotation.x = THREE.MathUtils.degToRad(val);
-          });
-        hullFolder.add(hullRotation, 'roll', -180, 180, 1)
-          .name("Roll")
-          .onChange(val => {
-            shipGroup.rotation.y = THREE.MathUtils.degToRad(val);
-          });
-        hullFolder.open();
-
-        // 创建关节控制面板（保持原有关节控制功能）
-        createJointGUI();
-      };
-
-      onResize();
-      window.addEventListener('resize', onResize);
-    }
-
-    // 如果需要加载 STL 模型，可使用此函数（可选）
-    function loadSTLModel() {
-      const stlLoader = new STLLoader();
-      stlLoader.load('models/urdf3/cone.stl', (geometry) => {
-        const material = new MeshStandardMaterial({ color: 0xAAAAAA });
-        const mesh = new Mesh(geometry, material);
-
-        mesh.position.set(0, 0, 0);
-        mesh.scale.set(1, 1, 1);
-        mesh.castShadow = true;
-        mesh.receiveShadow = true;
-
-        scene.add(mesh);
-        console.log("STL Model Loaded:", mesh);
-      }, undefined, function (error) {
-        console.error("STLLoader Error:", error);
-      });
-    }
-
-    // 创建关节控制面板
-    function createJointGUI() {
-      if (!robot || !robot.joints) return;
-      const jointsFolder = gui.addFolder("Joint Controls");
-
-      Object.keys(robot.joints).forEach(jointName => {
-        const jointObj = robot.joints[jointName];
-
-        // 只为 revolute 或 continuous 类型的关节添加控制（以度为单位）
-        if (jointObj.jointType === 'revolute' || jointObj.jointType === 'continuous') {
-          jointGUI[jointName] = { angleDeg: 0 };
-
-          jointsFolder.add(jointGUI[jointName], 'angleDeg', -180, 180, 1)
-            .name(jointName)
-            .onChange(val => {
-              const angleRad = val * Math.PI / 180;
-              jointObj.setJointValue(angleRad);
-            });
-        }
-      });
-
-      jointsFolder.open();
-    }
-
-    function onResize() {
-      renderer.setSize(window.innerWidth, window.innerHeight);
-      renderer.setPixelRatio(window.devicePixelRatio);
-
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-    }
-
-    function render() {
-      requestAnimationFrame(render);
-      renderer.render(scene, camera);
-    }
-  </script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.0"></script>
+  <
 </head>
 <body id="page-top">
-  <!-- SB Admin 2 页面结构 -->
+  <!-- Page Wrapper -->
   <div id="wrapper">
     <!-- Sidebar -->
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
-        <div class="sidebar-brand-text mx-3">仪表板</div>
+      <!-- Sidebar Brand -->
+      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="first_page.html">
+        <div class="sidebar-brand-icon rotate-n-15">
+          <i class="fas fa-laugh-wink"></i>
+        </div>
+        <div class="sidebar-brand-text mx-3">SSR团队</div>
       </a>
       <hr class="sidebar-divider my-0">
+      <!-- Nav Item - Dashboard -->
       <li class="nav-item active">
-        <a class="nav-link" href="index.html">
+        <a class="nav-link" href="first_page.html">
           <i class="fas fa-fw fa-tachometer-alt"></i>
-          <span>首页</span>
+          <span>首页展示</span>
+        </a>
+      </li>
+      <hr class="sidebar-divider">
+      <div class="sidebar-heading">数据图表</div>
+      <li class="nav-item">
+        <a class="nav-link" href="chart.html">
+          <i class="fas fa-fw fa-chart-area"></i>
+          <span>图表</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="tables.html">
+          <i class="fas fa-fw fa-table"></i>
+          <span>表格</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="XBox.html">
+          <i class="fas fa-fw fa-cog"></i>
+          <span>手柄效果</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="XBox.html">
+          <i class="fas fa-fw fa-wrench"></i>
+          <span>水下仿真插入</span>
+        </a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="camera.html">
+          <i class="fas fa-fw fa-camera"></i>
+          <span>摄像头读取</span>
+        </a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="http://localhost:8001/vendor/three.js-r161/examples/simple.html">
+          <i class="fas fa-fw fa-camera"></i>
+          <span>模型展示</span>
         </a>
       </li>
     </ul>
-    <!-- End Sidebar -->
+    <!-- End of Sidebar -->
 
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
       <!-- Main Content -->
       <div id="content">
-        <!-- 这里可以添加其他页面内容，当前 URDF 模型展示功能的 canvas 会在 body 中显示 -->
-      </div>
-      <!-- End Main Content -->
+        <!-- Topbar -->
+        <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+          <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+            <i class="fa fa-bars"></i>
+          </button>
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item dropdown no-arrow">
+              <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small">哈威SSR团队研发</span>
+                <img class="img-profile rounded-circle" src="img/picture.png">
+              </a>
+            </li>
+          </ul>
+        </nav>
+        <!-- End of Topbar -->
 
-      <!-- Footer -->
-      <footer class="sticky-footer bg-white">
-        <div class="container my-auto">
-          <div class="copyright text-center my-auto">
-            <span>© 2025 Your Company</span>
-          </div>
-        </div>
-      </footer>
-    </div>
-    <!-- End Content Wrapper -->
-  </div>
-  <!-- End Page Wrapper -->
-
-  <!-- 引入必要的 JavaScript 库 -->
-  <script src="vendor/jquery/jquery.min.js"></script>
-  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-  <script src="js/sb-admin-2.min.js"></script>
-
-  <!-- 自定义脚本（如有需要） -->
-  <script>
-    // 此处可以添加其他自定义脚本
-  </script>
+        <!-- Begin Page Content -->
+        
 </body>
 </html>

@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>哈威SSR团队作品前端展示</title>
+  <!-- Custom fonts for this template-->
+  <link href="css/sb-admin-2.min.css" rel="stylesheet">
+    <!-- 引入Font Awesome图标库 -->
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <!-- 引入Toastr CSS（用于通知弹窗） -->
+    <link href="vendor/toastr/toastr.min.css" rel="stylesheet">
+    <!-- 引入Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <!-- 引入Toastr JS -->
+    <script src="vendor/toastr/toastr.min.js"></script>
+  <style>
+    /* 自定义图表容器样式 */
+    .chart-container {
+        width: 100%;
+        margin-bottom: 50px;
+        width: 500px;
+        height: 444px;
+    }
+
+    /* 使用Bootstrap的网格系统，将图表排列为一行两列 */
+    .row-cols-1.row-cols-md-2 {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .col-md-6 {
+        flex: 0 0 50%;
+        max-width: 50%;
+        padding: 10px;
+    }
+
+    /* 调整canvas大小以适应卡片 */
+    canvas {
+        max-width: 100%;
+        height: 300px; /* 固定高度以确保一致性 */
+    }
+    .m-gamepadItemJoysticks {
+        background: none;
+        padding: 20px;
+        /*margin-left: 445px;*/
+        transform: scale(0.9); /* 整体缩小80% */
+        transform-origin: top left; /* 根据需要调整缩放原点 */
+    }
+    button {
+        padding: 10px;
+        margin: 5px;
+        cursor: pointer;
+    }
+</style>
+  <style>
+    /* 摄像头页面样式 */
+    .camera-container {
+      padding: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    #video {
+      width: 100%;
+      height: auto;
+      background: #000;
+    }
+    .camera-controls {
+      text-align: center;
+      margin: 20px 0;
+    }
+    .camera-controls button {
+      padding: 12px 24px;
+      margin: 0 10px;
+      border-radius: 25px;
+      transition: all 0.3s;
+    }
+    #startCamera { background-color: #28a745; }
+    #takePhoto { background-color: #007bff; }
+    #switchCamera { background-color: #6c757d; }
+    #takePhoto[disabled] { opacity: 0.6; cursor: not-allowed; }
+  </style>
+</head>
+<body id="page-top">
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+    <!-- Sidebar -->
+    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="first_page.html">
+          <div class="sidebar-brand-icon rotate-n-15">
+              <i class="fas fa-laugh-wink"></i>
+          </div>
+          <div class="sidebar-brand-text mx-3">SSR团队</div>
+      </a>
+      <hr class="sidebar-divider my-0">
+      <li class="nav-item active">
+          <a class="nav-link" href="first_page.html">
+              <i class="fas fa-fw fa-tachometer-alt"></i>
+              <span>首页展示</span></a>
+      </li>
+      <hr class="sidebar-divider">
+      <div class="sidebar-heading">数据图表</div>
+      <li class="nav-item">
+          <a class="nav-link" href="chart.html">
+              <i class="fas fa-fw fa-chart-area"></i>
+              <span>图表</span></a>
+      </li>
+      <li class="nav-item">
+          <a class="nav-link" href="tables.html">
+              <i class="fas fa-fw fa-table"></i>
+              <span>表格</span></a>
+      </li>
+      <li class="nav-item">
+          <a class="nav-link collapsed" href="XBox.html">
+              <i class="fas fa-fw fa-cog"></i>
+              <span>手柄效果</span>
+          </a>
+      </li>
+      <li class="nav-item">
+          <a class="nav-link collapsed" href="XBox.html">
+              <i class="fas fa-fw fa-wrench"></i>
+              <span>水下仿真插入</span>
+          </a>
+      </li>
+      <li class="nav-item">
+          <a class="nav-link" href="camera.html">
+              <i class="fas fa-fw fa-camera"></i>
+              <span>摄像头读取</span>
+          </a>
+      </li>
+      <li class="nav-item">
+          <a class="nav-link" href="http://localhost:8001/vendor/three.js-r161/examples/sinmple.html">
+              <i class="fas fa-fw fa-camera"></i>
+              <span>模型展示</span>
+          </a>
+      </li>
+  </ul>
+    <!-- End of Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+      <!-- Main Content -->
+      <div id="content">
+        <!-- Topbar -->
+        <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+          <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+            <i class="fa fa-bars"></i>
+          </button>
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item dropdown no-arrow">
+              <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small">哈威SSR团队研发</span>
+                <img class="img-profile rounded-circle" src="img/picture.png">
+              </a>
+            </li>
+          </ul>
+        </nav>
+        <!-- End of Topbar -->
+
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+          <!-- Page Heading -->
+          <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">各项数值展示</h1>
+          </div>
+
+          <!-- Stat Cards Row -->
+          <div class="row">
+            <!-- 水中PH值卡片 -->
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                        水中PH值</div>
+                      <span id="phValue" class="h5 mb-0 font-weight-bold text-gray-800 mr-3">6.8</span>
+                      <span id="phUnit" class="mr-2">单位：pH</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- 光强卡片 -->
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                        光强</div>
+                      <span id="luxValue" class="h5 mb-0 font-weight-bold text-gray-800 mr-3">2300</span>
+                      <span id="LUXVule">单位：lux</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- 速度卡片 -->
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-info text-uppercase mb-1">速度</div>
+                      <span id="speedValue" class="h5 mb-0 font-weight-bold text-gray-800 mr-3">2300</span>
+                      <span id="SPEEDVule">单位：m/s</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- 电导率卡片 -->
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                        电导率</div>
+                      <span id="esValue" class="h5 mb-0 font-weight-bold text-gray-800 mr-3">1800</span>
+                      <span id="ESVule">单位：µS/cm</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          
+
+          <!-- 图表行 -->
+          <div class="row">
+            <!-- 水下温度折线图 -->
+            <div class="col-xl-8 col-lg-7">
+              <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                  <h6 class="m-0 font-weight-bold text-primary">水下温度</h6>
+                  <div class="dropdown no-arrow">
+                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+                      aria-haspopup="true" aria-expanded="false">
+                      <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                      aria-labelledby="dropdownMenuLink">
+                      <div class="dropdown-header">Dropdown Header:</div>
+                      <a class="dropdown-item" href="#">Action</a>
+                      <a class="dropdown-item" href="#">Another action</a>
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" href="#">Something else here</a>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div class="chart-area">
+                    <canvas id="myAreaChart" width="100" height="37"></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- 饼图 -->
+            <div class="col-xl-4 col-lg-5">
+              <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                  <h6 class="m-0 font-weight-bold text-primary">Revenue Sources</h6>
+                  <div class="dropdown no-arrow">
+                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+                      aria-haspopup="true" aria-expanded="false">
+                      <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                      aria-labelledby="dropdownMenuLink">
+                      <div class="dropdown-header">Dropdown Header:</div>
+                      <a class="dropdown-item" href="#">Action</a>
+                      <a class="dropdown-item" href="#">Another action</a>
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" href="#">Something else here</a>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div class="chart-pie pt-4 pb-2">
+                    <canvas id="myPieChart"></canvas>
+                  </div>
+                  <div class="mt-4 text-center small">
+                    <span class="mr-2">
+                      <i class="fas fa-circle text-primary"></i> Direct
+                    </span>
+                    <span class="mr-2">
+                      <i class="fas fa-circle text-success"></i> Social
+                    </span>
+                    <span class="mr-2">
+                      <i class="fas fa-circle text-info"></i> Referral
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <!-- 手柄模块 -->
+            <div class="col-md-6">
+              <div class="m-gamepadItemJoysticks">
+                <!-- 游戏手柄控制区域 -->
+                <svg width="700" viewBox="0 0 441 383" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <g id="XBox">
+                    <path id="LOutline" d="M220.5 294.5C220.5 294.5 195 294.5 150 294.5C105 294.5 81.5 378.5 49.5 378.5C17.5 378.5 4 363.9 4 317.5C4 271.1 43.5 165.5 55 137.5C66.5 109.5 95.5 92.0001 128 92.0001C154 92.0001 200.5 92.0001 220.5 92.0001" stroke="hsl(210,50%,85%)" stroke-width="3" stroke-opacity="1"></path>
+                    <path id="ROutline" d="M220 294.5C220 294.5 245.5 294.5 290.5 294.5C335.5 294.5 359 378.5 391 378.5C423 378.5 436.5 363.9 436.5 317.5C436.5 271.1 397 165.5 385.5 137.5C374 109.5 345 92.0001 312.5 92.0001C286.5 92.0001 240 92.0001 220 92.0001" stroke="hsl(210,50%,85%)" stroke-width="3" stroke-opacity="1"></path>
+                    <circle id="LStickOutline" cx="113" cy="160" r="37.5" stroke="hsl(210,50%,85%)" stroke-width="3" stroke-opacity="1"></circle>
+                    <circle id="LeftStick" cx="113" cy="160" r="28" fill="rgba(0,0,0,0)" stroke="rgba(0,0,0,1)" stroke-width="3"></circle>
+                    <circle id="RStickOutline" cx="278" cy="238" r="37.5" stroke="hsl(210,50%,85%)" stroke-width="3" stroke-opacity="1"></circle>
+                    <circle id="RightStick" cx="278" cy="238" r="28" fill="rgba(0,0,0,0)" stroke="rgba(0,0,0,1)" stroke-width="3"></circle>
+                    <circle id="DOutline" cx="166" cy="238" r="37.5" stroke="hsl(210,50%,85%)" stroke-width="3" stroke-opacity="1"></circle>
+                    <g id="DUp">
+                        <mask id="path-8-inside-1" fill="white">
+                            <path d="M177.669 222.335C180.793 219.21 180.816 213.997 176.868 212.014C176.327 211.743 175.776 211.491 175.215 211.258C172.182 210.002 168.931 209.355 165.648 209.355C162.365 209.355 159.114 210.002 156.081 211.258C155.521 211.491 154.969 211.743 154.429 212.014C150.48 213.997 150.503 219.21 153.627 222.335L159.991 228.698C163.116 231.823 168.181 231.823 171.305 228.698L177.669 222.335Z"></path>
+                        </mask>
+                        <path d="M177.669 222.335C180.793 219.21 180.816 213.997 176.868 212.014C176.327 211.743 175.776 211.491 175.215 211.258C172.182 210.002 168.931 209.355 165.648 209.355C162.365 209.355 159.114 210.002 156.081 211.258C155.521 211.491 154.969 211.743 154.429 212.014C150.48 213.997 150.503 219.21 153.627 222.335L159.991 228.698C163.116 231.823 168.181 231.823 171.305 228.698L177.669 222.335Z" fill="rgba(0,0,0,0)" stroke="rgba(0,0,0,1)" stroke-width="6" mask="url(#path-8-inside-1)"></path>
+                    </g>
+                    <g id="DRight">
+                        <mask id="path-9-inside-2" fill="white">
+                            <path d="M181.447 249.669C184.571 252.793 189.785 252.816 191.768 248.868C192.039 248.327 192.291 247.776 192.523 247.215C193.78 244.182 194.426 240.931 194.426 237.648C194.426 234.365 193.78 231.114 192.523 228.081C192.291 227.521 192.039 226.969 191.768 226.429C189.785 222.48 184.571 222.503 181.447 225.627L175.083 231.991C171.959 235.116 171.959 240.181 175.083 243.305L181.447 249.669Z"></path>
+                        </mask>
+                        <path d="M181.447 249.669C184.571 252.793 189.785 252.816 191.768 248.868C192.039 248.327 192.291 247.776 192.523 247.215C193.78 244.182 194.426 240.931 194.426 237.648C194.426 234.365 193.78 231.114 192.523 228.081C192.291 227.521 192.039 226.969 191.768 226.429C189.785 222.48 184.571 222.503 181.447 225.627L175.083 231.991C171.959 235.116 171.959 240.181 175.083 243.305L181.447 249.669Z" fill="rgba(0,0,0,0)" stroke="rgba(0,0,0,1)" stroke-width="6" mask="url(#path-9-inside-2)"></path>
+                    </g>
+                    <g id="DDown">
+                        <mask id="path-10-inside-3" fill="white">
+                            <path d="M154.113 253.447C150.989 256.571 150.966 261.785 154.914 263.767C155.455 264.039 156.006 264.291 156.566 264.523C159.6 265.78 162.85 266.426 166.134 266.426C169.417 266.426 172.667 265.78 175.701 264.523C176.261 264.291 176.812 264.039 177.353 263.767C181.301 261.785 181.279 256.571 178.154 253.447L171.79 247.083C168.666 243.959 163.601 243.959 160.477 247.083L154.113 253.447Z"></path>
+                        </mask>
+                        <path d="M154.113 253.447C150.989 256.571 150.966 261.785 154.914 263.767C155.455 264.039 156.006 264.291 156.566 264.523C159.6 265.78 162.85 266.426 166.134 266.426C169.417 266.426 172.667 265.78 175.701 264.523C176.261 264.291 176.812 264.039 177.353 263.767C181.301 261.785 181.279 256.571 178.154 253.447L171.79 247.083C168.666 243.959 163.601 243.959 160.477 247.083L154.113 253.447Z" fill="rgba(0,0,0,0)" stroke="rgba(0,0,0,1)" stroke-width="6" mask="url(#path-10-inside-3)"></path>
+                    </g>
+                    <g id="DLeft">
+                        <mask id="path-11-inside-4" fill="white">
+                            <path d="M150.335 226.113C147.21 222.989 141.997 222.966 140.014 226.914C139.743 227.455 139.491 228.006 139.258 228.566C138.002 231.6 137.355 234.85 137.355 238.134C137.355 241.417 138.002 244.667 139.258 247.701C139.491 248.261 139.743 248.812 140.014 249.353C141.997 253.301 147.21 253.279 150.335 250.154L156.698 243.79C159.823 240.666 159.823 235.601 156.698 232.477L150.335 226.113Z"></path>
+                        </mask>
+                        <path d="M150.335 226.113C147.21 222.989 141.997 222.966 140.014 226.914C139.743 227.455 139.491 228.006 139.258 228.566C138.002 231.6 137.355 234.85 137.355 238.134C137.355 241.417 138.002 244.667 139.258 247.701C139.491 248.261 139.743 248.812 140.014 249.353C141.997 253.301 147.21 253.279 150.335 250.154L156.698 243.79C159.823 240.666 159.823 235.601 156.698 232.477L150.335 226.113Z" fill="rgba(0,0,0,0)" stroke="rgba(0,0,0,1)" stroke-width="6" mask="url(#path-11-inside-4)"></path>
+                    </g>
+                    <circle id="BOutline" cx="329" cy="160" r="37.5" stroke="hsl(210,50%,85%)" stroke-width="3" stroke-opacity="1"></circle>
+                    <g id="BTop">
+                        <mask id="path-13-inside-5" fill="white">
+                            <path d="M340.669 144.335C343.793 141.21 343.816 135.997 339.868 134.014C339.327 133.743 338.776 133.491 338.215 133.258C335.182 132.002 331.931 131.355 328.648 131.355C325.365 131.355 322.114 132.002 319.081 133.258C318.521 133.491 317.969 133.743 317.429 134.014C313.48 135.997 313.503 141.21 316.627 144.335L322.991 150.698C326.116 153.823 331.181 153.823 334.305 150.698L340.669 144.335Z"></path>
+                        </mask>
+                        <path d="M340.669 144.335C343.793 141.21 343.816 135.997 339.868 134.014C339.327 133.743 338.776 133.491 338.215 133.258C335.182 132.002 331.931 131.355 328.648 131.355C325.365 131.355 322.114 132.002 319.081 133.258C318.521 133.491 317.969 133.743 317.429 134.014C313.48 135.997 313.503 141.21 316.627 144.335L322.991 150.698C326.116 153.823 331.181 153.823 334.305 150.698L340.669 144.335Z" fill="rgba(0,0,0,0)" stroke="rgba(0,0,0,1)" stroke-width="6" mask="url(#path-13-inside-5)"></path>
+                    </g>
+                    <g id="BRight">
+                        <mask id="path-14-inside-6" fill="white">
+                            <path d="M344.447 171.669C347.571 174.793 352.785 174.816 354.768 170.868C355.039 170.327 355.291 169.776 355.523 169.215C356.78 166.182 357.426 162.931 357.426 159.648C357.426 156.365 356.78 153.114 355.523 150.081C355.291 149.521 355.039 148.969 354.768 148.429C352.785 144.48 347.571 144.503 344.447 147.627L338.083 153.991C334.959 157.116 334.959 162.181 338.083 165.305L344.447 171.669Z"></path>
+                        </mask>
+                        <path d="M344.447 171.669C347.571 174.793 352.785 174.816 354.768 170.868C355.039 170.327 355.291 169.776 355.523 169.215C356.78 166.182 357.426 162.931 357.426 159.648C357.426 156.365 356.78 153.114 355.523 150.081C355.291 149.521 355.039 148.969 354.768 148.429C352.785 144.48 347.571 144.503 344.447 147.627L338.083 153.991C334.959 157.116 334.959 162.181 338.083 165.305L344.447 171.669Z" fill="rgba(0,0,0,0)" stroke="rgba(0,0,0,1)" stroke-width="6" mask="url(#path-14-inside-6)"></path>
+                    </g>
+                    <g id="BBottom">
+                        <mask id="path-15-inside-7" fill="white">
+                            <path d="M317.113 175.447C313.989 178.571 313.966 183.785 317.914 185.767C318.455 186.039 319.006 186.291 319.566 186.523C322.6 187.78 325.85 188.426 329.134 188.426C332.417 188.426 335.667 187.78 338.701 186.523C339.261 186.291 339.812 186.039 340.353 185.767C344.301 183.785 344.279 178.571 341.154 175.447L334.79 169.083C331.666 165.959 326.601 165.959 323.477 169.083L317.113 175.447Z"></path>
+                        </mask>
+                        <path d="M317.113 175.447C313.989 178.571 313.966 183.785 317.914 185.767C318.455 186.039 319.006 186.291 319.566 186.523C322.6 187.78 325.85 188.426 329.134 188.426C332.417 188.426 335.667 187.78 338.701 186.523C339.261 186.291 339.812 186.039 340.353 185.767C344.301 183.785 344.279 178.571 341.154 175.447L334.79 169.083C331.666 165.959 326.601 165.959 323.477 169.083L317.113 175.447Z" fill="rgba(0,0,0,0)" stroke="rgba(0,0,0,1)" stroke-width="6" mask="url(#path-15-inside-7)"></path>
+                    </g>
+                    <g id="BLeft">
+                        <mask id="path-16-inside-8" fill="white">
+                            <path d="M313.335 148.113C310.21 144.989 304.997 144.966 303.014 148.914C302.743 149.455 302.491 150.006 302.258 150.566C301.002 153.6 300.355 156.851 300.355 160.134C300.355 163.417 301.002 166.668 302.258 169.701C302.491 170.261 302.743 170.812 303.014 171.353C304.997 175.301 310.21 175.279 313.335 172.154L319.698 165.79C322.823 162.666 322.823 157.601 319.698 154.477L313.335 148.113Z"></path>
+                        </mask>
+                        <path d="M313.335 148.113C310.21 144.989 304.997 144.966 303.014 148.914C302.743 149.455 302.491 150.006 302.258 150.566C301.002 153.6 300.355 156.851 300.355 160.134C300.355 163.417 301.002 166.668 302.258 169.701C302.491 170.261 302.743 170.812 303.014 171.353C304.997 175.301 310.21 175.279 313.335 172.154L319.698 165.79C322.823 162.666 322.823 157.601 319.698 154.477L313.335 148.113Z" fill="rgba(0,0,0,0)" stroke="rgba(0,0,0,1)" stroke-width="6" mask="url(#path-16-inside-8)"></path>
+                    </g>
+                    <g id="LMeta">
+                        <circle cx="185" cy="162" r="10" fill="rgba(0,0,0,0)" stroke="rgba(0,0,0,1)" stroke-width="3"></circle>
+                    </g>
+                    <g id="RMeta">
+                        <circle cx="259" cy="162" r="10" fill="rgba(0,0,0,0)" stroke="rgba(0,0,0,1)" stroke-width="3"></circle>
+                    </g>
+                    <rect id="L1" x="111.5" y="61.5" width="41" height="13" rx="6.5" fill="rgba(0,0,0,0)" stroke="rgba(0,0,0,1)" stroke-width="3"></rect>
+                    <rect id="R1" x="289.5" y="61.5" width="41" height="13" rx="6.5" fill="rgba(0,0,0,0)" stroke="rgba(0,0,0,1)" stroke-width="3"></rect>
+                    <path id="L2" d="M152.5 37C152.5 41.1421 149.142 44.5 145 44.5H132C127.858 44.5 124.5 41.1421 124.5 37V16.5C124.5 8.76801 130.768 2.5 138.5 2.5C146.232 2.5 152.5 8.76801 152.5 16.5V37Z" fill="rgba(0,0,0,0)" stroke="rgba(0,0,0,1)" stroke-width="3"></path>
+                    <path id="R2" d="M317.5 37C317.5 41.1421 314.142 44.5 310 44.5H297C292.858 44.5 289.5 41.1421 289.5 37V16.5C289.5 8.76801 295.768 2.5 303.5 2.5C311.232 2.5 317.5 8.76801 317.5 16.5V37Z" fill="rgba(0,0,0,0)" stroke="rgba(0,0,0,1)" stroke-width="3"></path>
+                    <line x1="30" y1="210" x2="130" y2="300" stroke-width="3" stroke="hsl(210,50%,85%)" opacity="0.3"></line>
+                    <line x1="411" y1="210" x2="311" y2="300" stroke-width="3" stroke="hsl(210,50%,85%)" opacity="0.3"></line>
+                </g>
+                </svg>
+
+              </div>
+            </div>
+            
+            <!-- 摄像头模块 -->
+            <div class="col-md-6">
+              <div class="camera-container" style="margin: 0;">
+                <!-- 摄像头内容 -->
+                <div class="container-fluid">
+                  <div class="camera-container">
+                    <!-- 摄像头卡片 -->
+                    <div class="card shadow mb-4">
+                      <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">摄像头控制面板</h6>
+                      </div>
+                      <div class="card-body">
+                        <div class="text-center">
+                          <video id="video" width="640" height="480" autoplay playsinline></video>
+                          <div class="camera-controls mt-4">
+                            <button id="startCamera" class="btn btn-success">
+                              <i class="fas fa-video"></i> 开启摄像头
+                            </button>
+                            <button id="takePhoto" class="btn btn-primary" disabled>
+                              <i class="fas fa-camera"></i> 拍照
+                            </button>
+                            <button id="switchCamera" class="btn btn-secondary">
+                              <i class="fas fa-sync-alt"></i> 切换摄像头
+                            </button>
+                          </div>
+                          <canvas id="canvas" width="640" height="480" style="display: none;"></canvas>
+                          <img id="photo" alt="captured photo" class="mt-3" style="display: none; max-width: 100%;">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Content Row -->
+          <div class="row">
+
+            <!-- Content Column -->
+            <div class="col-lg-6 mb-4">
+
+                <!-- Project Card Example -->
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Projects</h6>
+                    </div>
+                    <div class="card-body">
+                        <h4 class="small font-weight-bold">YAW <span
+                                class="float-right" id="yawValue">0°</span></h4>
+                        <div class="progress mb-4">
+                            <div class="progress-bar bg-danger" id="yawProgress" role="progressbar" style="width: 0%"
+                                aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <h4 class="small font-weight-bold">PITCH <span
+                                class="float-right" id="pitchValue">0°</span></h4>
+                        <div class="progress mb-4">
+                            <div class="progress-bar bg-warning" id="pitchProgress" role="progressbar" style="width: 0%"
+                                aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <h4 class="small font-weight-bold">ROW <span
+                                class="float-right" id="rowValue">0°</span></h4>
+                        <div class="progress mb-4">
+                            <div class="progress-bar" id="rowProgress" role="progressbar" style="width: 0%"
+                                aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                </div>
+
+      <!-- Footer -->
+      <footer class="sticky-footer bg-white">
+        <div class="container my-auto">
+          <div class="copyright text-center my-auto">
+            <span>Copyright &copy; Your Website 2021</span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    <!-- End of Content Wrapper -->
+  </div>
+  <!-- End of Page Wrapper -->
+
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+
+  <!-- Logout Modal-->
+  <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+          <a class="btn btn-primary" href="login.html">Logout</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap core JavaScript-->
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <!-- Core plugin JavaScript-->
+  <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+  <!-- Custom scripts for all pages-->
+  <script src="js/sb-admin-2.min.js"></script>
+  <!-- Toastr JS -->
+  <script src="vendor/toastr/toastr.min.js"></script>
+  <!-- Page level plugins -->
+  <script src="vendor/chart.js/Chart.min.js"></script>
+
+  <!-- Page level custom scripts -->
+  <script>
+    // PH、光强、速度、电导率数值更新函数
+    function generateRandomPH() {
+      const min = 6.0, max = 7.0;
+      return Math.round((Math.random() * (max - min) + min) * 10) / 10;
+    }
+    function updatePHValue() {
+      const phElement = document.getElementById('phValue');
+      if (phElement) {
+        phElement.textContent = generateRandomPH().toFixed(1);
+      }
+    }
+    function generateRandomLux() {
+      const min = 2000.0, max = 4000.0;
+      return Math.round((Math.random() * (max - min) + min) * 10) / 10;
+    }
+    function updateLuxValue() {
+      const luxElement = document.getElementById('luxValue');
+      if (luxElement) {
+        luxElement.textContent = generateRandomLux().toFixed(1);
+      }
+    }
+    function generateRandomSpeed() {
+      const min = 2000.0, max = 4000.0;
+      return Math.round((Math.random() * (max - min) + min) * 10) / 10;
+    }
+    function updateSpeedValue() {
+      const speedElement = document.getElementById('speedValue');
+      if (speedElement) {
+        speedElement.textContent = generateRandomSpeed().toFixed(1);
+      }
+    }
+    function generateRandomES() {
+      const min = 2000.0, max = 4000.0;
+      return Math.round((Math.random() * (max - min) + min) * 10) / 10;
+    }
+    function updateESValue() {
+      const esElement = document.getElementById('esValue');
+      if (esElement) {
+        esElement.textContent = generateRandomES().toFixed(1);
+      }
+    }
+    // 使用fetch发送GraphQL请求
+// function fetchJoystickData() {
+//     fetch('http://localhost:5000/graphql', {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/json',
+//         },
+//         body: JSON.stringify({
+//             query: GET_JOYSTICK_DATA,
+//         }),
+//     })
+//     .then(response => response.json())
+//     .then(data => {
+//         const joystickData = data.data.joystick;
+//         if (!joystickData) {
+//             console.log('Joystick data not available');
+//             return;
+//         }
+//
+//         // 获取YAW、PITCH、ROW的数据
+//         const yaw = joystickData.YOW; // 假设返回的数据格式与此类似
+//         const pitch = joystickData.PITCH;
+//         const row = joystickData.ROW;
+//
+//         // 更新进度条
+//         updateProgressBar(yaw, pitch, row);
+//         updateEulerAngles(yaw, pitch, row);
+//     })
+//     .catch(error => {
+//         console.error('Error fetching joystick data:', error);
+//     });
+// }
+//
+// // 设置定时器，每隔1秒获取一次数据
+// setInterval(fetchJoystickData, 1000);
+
+
+
+// 设置定时器，每隔1秒调用一次GraphQL查询
+// setInterval(fetchJoystickData, 10); // 1000ms = 1秒
+    // 获取所有需要操作的元素
+    const elements = {
+    leftStick: document.getElementById('LeftStick'),
+    rightStick: document.getElementById('RightStick'),
+    dUp: document.querySelector('#DUp > path'),
+    dRight: document.querySelector('#DRight > path'),
+    dDown: document.querySelector('#DDown > path'),
+    dLeft: document.querySelector('#DLeft > path'),
+    bTop: document.querySelector('#BTop > path'),
+    bRight: document.querySelector('#BRight > path'),
+    bBottom: document.querySelector('#BBottom > path'),
+    bLeft: document.querySelector('#BLeft > path'),
+    LMeta: document.querySelector('#LMeta > circle'),
+    RMeta: document.querySelector('#RMeta > circle'),
+    L1: document.getElementById('L1'),
+    R1: document.getElementById('R1'),
+    L2: document.getElementById('L2'),
+    R2: document.getElementById('R2')
+};
+
+/**
+ * 解析颜色字符串为 RGBA 组件
+ * 支持 #RRGGBB, #RRGGBBAA, rgb(...), rgba(...)
+ * @param {string} color - 颜色字符串
+ * @returns {object} - { r, g, b, a }
+ */
+function parseColor(color) {
+    let r, g, b, a = 1;
+
+    // 处理 16 进制颜色
+    if (color.startsWith('#')) {
+        let hex = color.slice(1);
+        if (hex.length === 3) {
+            // #RGB
+            r = parseInt(hex[0] + hex[0], 16);
+            g = parseInt(hex[1] + hex[1], 16);
+            b = parseInt(hex[2] + hex[2], 16);
+        } else if (hex.length === 6) {
+            // #RRGGBB
+            r = parseInt(hex.slice(0, 2), 16);
+            g = parseInt(hex.slice(2, 4), 16);
+            b = parseInt(hex.slice(4, 6), 16);
+        } else if (hex.length === 8) {
+            // #RRGGBBAA
+            r = parseInt(hex.slice(0, 2), 16);
+            g = parseInt(hex.slice(2, 4), 16);
+            b = parseInt(hex.slice(4, 6), 16);
+            a = parseInt(hex.slice(6, 8), 16) / 255;
+        } else {
+            throw new Error('不支持的16进制颜色格式');
+        }
+    }
+    // 处理 rgb() 或 rgba()
+    else if (color.startsWith('rgb')) {
+        const regex = /rgba?\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})(?:\s*,\s*(\d*\.?\d+))?\)/;
+        const result = regex.exec(color);
+        if (result) {
+            r = parseInt(result[1], 10);
+            g = parseInt(result[2], 10);
+            b = parseInt(result[3], 10);
+            if (result[4] !== undefined) {
+                a = parseFloat(result[4]);
+            }
+        } else {
+            throw new Error('不支持的 RGB/RGBA 颜色格式');
+        }
+    }
+    else {
+        throw new Error('不支持的颜色格式');
+    }
+
+    return { r, g, b, a };
+}
+
+/**
+ * 将 RGBA 组件转换为 RGBA 字符串
+ * @param {object} rgba - { r, g, b, a }
+ * @returns {string} - rgba(...) 格式字符串
+ */
+function rgbaToString(rgba) {
+    return `rgba(${rgba.r}, ${rgba.g}, ${rgba.b}, ${rgba.a})`;
+}
+
+/**
+ * 将 RGBA 组件转换为 16 进制字符串
+ * @param {object} rgba - { r, g, b, a }
+ * @param {boolean} includeAlpha - 是否包含 alpha 通道
+ * @returns {string} - #RRGGBB 或 #RRGGBBAA 格式字符串
+ */
+function rgbaToHex(rgba, includeAlpha = false) {
+    const toHex = (c) => {
+        const hex = c.toString(16);
+        return hex.length === 1 ? '0' + hex : hex;
+    };
+    let hex = `#${toHex(rgba.r)}${toHex(rgba.g)}${toHex(rgba.b)}`;
+    if (includeAlpha) {
+        const alpha = Math.round(rgba.a * 255);
+        hex += toHex(alpha);
+    }
+    return hex.toUpperCase();
+}
+
+/**
+ * 插值计算颜色
+ * @param {string} startColor - 起始颜色（支持 #RRGGBB, #RRGGBBAA, rgb(...), rgba(...)）
+ * @param {string} endColor - 终止颜色（支持 #RRGGBB, #RRGGBBAA, rgb(...), rgba(...)）
+ * @param {number} percentage - 百分比（0-100）
+ * @param {string} outputFormat - 输出格式（'rgba' 或 'hex'）
+ * @returns {string} - 插值后的颜色字符串
+ */
+function interpolateColor(startColor, endColor, percentage, outputFormat = 'rgba') {
+    // 确保百分比在 0 到 100 之间
+    percentage = Math.max(0, Math.min(100, percentage));
+
+    const p = percentage / 100;
+
+    // 解析颜色
+    const start = parseColor(startColor);
+    const end = parseColor(endColor);
+
+    // 计算插值后的 RGBA 组件
+    const r = Math.round(start.r + (end.r - start.r) * p);
+    const g = Math.round(start.g + (end.g - start.g) * p);
+    const b = Math.round(start.b + (end.b - start.b) * p);
+    const a = parseFloat((start.a + (end.a - start.a) * p).toFixed(2));
+
+    const interpolated = { r, g, b, a };
+
+    // 返回指定格式的颜色
+    if (outputFormat === 'hex') {
+        return rgbaToHex(interpolated, endColor.length === 9); // 判断是否需要包含 alpha
+    } else {
+        return rgbaToString(interpolated);
+    }
+}
+
+// 初始位置记录
+const originalPositions = {
+    leftStick: { cx: 113, cy: 160 },
+    rightStick: { cx: 278, cy: 238 }
+};
+
+// 移动左摇杆
+function moveLeftStick(cx, cy) {
+    elements.leftStick.setAttribute('cx', cx * 12 + originalPositions.leftStick.cx);
+    elements.leftStick.setAttribute('cy', cy * 12 + originalPositions.leftStick.cy);
+    const propertion = Math.sqrt(cx ** 2 + cy ** 2);
+    const color = interpolateColor('rgba(0,0,0,0)', '#201818', propertion * 100);
+    elements.leftStick.setAttribute('fill', color)
+}
+
+// 移动右摇杆
+function moveRightStick(cx, cy) {
+    elements.rightStick.setAttribute('cx', cx * 12 + originalPositions.rightStick.cx);
+    elements.rightStick.setAttribute('cy', cy * 12 + originalPositions.rightStick.cy);
+    const propertion = Math.sqrt(cx ** 2 + cy ** 2);
+    const color = interpolateColor('rgba(0,0,0,0)', '#201818', propertion * 100);
+    elements.rightStick.setAttribute('fill', color)
+}
+
+// 改变LT, RT键颜色
+function changeLTRTColor([LT, RT]) {
+    const colors = [
+        interpolateColor('rgba(0,0,0,0)', '#201818', (LT + 1) * 50),
+        interpolateColor('rgba(0,0,0,0)', '#201818', (RT + 1) * 50)
+    ];
+    elements.L2.setAttribute('fill', colors[0]);
+    elements.R2.setAttribute('fill', colors[1]);
+}
+
+// 改变LB, RB键颜色
+function changeLBRBColor([LB, RB]) {
+    const colors = {
+        active: '#201818',
+        inactive: 'rgba(0,0,0,0)'
+    }
+
+    elements.L1.setAttribute('fill', LB == 1 ? colors.active : colors.inactive);
+    elements.R1.setAttribute('fill', RB == 1 ? colors.active : colors.inactive);
+}
+
+// 改变方向键颜色
+function changeDpadColor([X, Y]) {
+    const colors = {
+        active: '#201818',
+        inactive: 'rgba(0,0,0,0)'
+    };
+
+    elements.dUp.setAttribute('fill', Y == 1 ? colors.active : colors.inactive);
+    elements.dRight.setAttribute('fill', X == 1 ? colors.active : colors.inactive);
+    elements.dDown.setAttribute('fill', Y == -1 ? colors.active : colors.inactive);
+    elements.dLeft.setAttribute('fill', X == -1 ? colors.active : colors.inactive);
+}
+
+// 改变ABXY键颜色
+function changeBpadColor([A, B, X, Y]) {
+    const colors = {
+        active: '#201818',
+        inactive: 'rgba(0,0,0,0)'
+    };
+
+    elements.bTop.setAttribute('fill', Y ? colors.active : colors.inactive);
+    elements.bRight.setAttribute('fill', B ? colors.active : colors.inactive);
+    elements.bBottom.setAttribute('fill', A ? colors.active : colors.inactive);
+    elements.bLeft.setAttribute('fill', X ? colors.active : colors.inactive);
+}
+
+// 改变Start, back键颜色
+function changeStartBackColor([start, back]) {
+    elements.LMeta.setAttribute('fill', start == 1 ? '#201818' : 'rgba(0,0,0,0)');
+    elements.RMeta.setAttribute('fill', back == 1 ? '#201818' : 'rgba(0,0,0,0)');
+}
+
+// 复位所有元素
+function resetAll() {
+    // 复位左摇杆
+    elements.leftStick.setAttribute('cx', originalPositions.leftStick.cx);
+    elements.leftStick.setAttribute('cy', originalPositions.leftStick.cy);
+    elements.leftStick.setAttribute('stroke', 'rgba(0,0,0,1)');
+
+    // 复位方向键
+    const dpadElements = [elements.dUp, elements.dRight, elements.dDown, elements.dLeft];
+    dpadElements.forEach(el => {
+        el.style.stroke = 'rgba(0,0,0,1)';
+        el.style.strokeWidth = '6';
+    });
+
+    // 复位B按钮
+    const bButtons = [elements.bTop, elements.bRight, elements.bBottom, elements.bLeft];
+    bButtons.forEach(el => {
+        el.style.transform = 'rotate(0deg)';
+        el.style.stroke = 'rgba(0,0,0,1)';
+    });
+}
+
+// 定义GraphQL查询
+const GET_JOYSTICK_DATA = `
+  query {
+    joystick {
+      available
+      axes
+      buttons
+      hats
+    }
+  }
+`;
+
+function updateEulerAngles(yaw, pitch, row) {
+    // 更新YAW显示值
+    const yawValueText = document.getElementById('yawValue');
+    yawValueText.textContent = yaw.toFixed(1) + '°';  // 保留一位小数
+
+    // 更新PITCH显示值
+    const pitchValueText = document.getElementById('pitchValue');
+    pitchValueText.textContent = pitch.toFixed(1) + '°';
+
+    // 更新ROW显示值
+    const rowValueText = document.getElementById('rowValue');
+    rowValueText.textContent = row.toFixed(1) + '°';
+}
+
+// 更新进度条和显示的函数
+function updateProgressBar(yaw, pitch, row) {
+    // 更新YAW进度条
+    const yawProgressBar = document.getElementById('yawProgress');
+    const yawValueText = document.getElementById('yawValue');
+    yawProgressBar.style.width = yaw + '%';  // 更新进度条的宽度
+    yawProgressBar.setAttribute('aria-valuenow', yaw);  // 更新aria值
+    yawValueText.textContent = yaw.toFixed(1) + '°';  // 更新显示的百分比
+
+    // 更新PITCH进度条
+    const pitchProgressBar = document.getElementById('pitchProgress');
+    const pitchValueText = document.getElementById('pitchValue');
+    pitchProgressBar.style.width = pitch + '%';
+    pitchProgressBar.setAttribute('aria-valuenow', pitch);
+    pitchValueText.textContent = pitch.toFixed(1) + '°';  // 显示为小数
+
+    // 更新ROW进度条
+    const rowProgressBar = document.getElementById('rowProgress');
+    const rowValueText = document.getElementById('rowValue');
+    rowProgressBar.style.width = row + '%';
+    rowProgressBar.setAttribute('aria-valuenow', row);
+    rowValueText.textContent = row.toFixed(1) + '°';  // 显示为小数
+}
+
+// 使用fetch发送GraphQL请求
+function fetchJoystickData() {
+    fetch('http://localhost:5000/graphql', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            query: GET_JOYSTICK_DATA,
+        }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        const joystickData = data.data.joystick;
+        if (!joystickData.available) {
+            console.log('Joystick not available');
+            return;
+        }
+        else {
+            // 更新左摇杆位置
+            moveLeftStick(joystickData.axes[0], joystickData.axes[1]);
+
+            // 更新右摇杆位置
+            moveRightStick(joystickData.axes[2], joystickData.axes[3]);
+
+            // 更新方向键颜色
+            changeDpadColor(joystickData.hats);
+
+            // 更新ABXY键颜色
+            changeBpadColor(joystickData.buttons.slice(0, 4));
+
+            // 更新Start, back键颜色
+            changeStartBackColor(joystickData.buttons.slice(6, 8));
+
+            // 更新LB, RB键颜色
+            changeLBRBColor(joystickData.buttons.slice(4, 6));
+
+            // 更新LT, RT键颜色
+            changeLTRTColor(joystickData.axes.slice(4, 6));
+        }
+    })
+    .catch(error => {
+        console.error('Error fetching joystick data:', error);
+    });
+}
+
+// 设置定时器，每隔0.01秒调用一次GraphQL查询
+setInterval(fetchJoystickData, 10); // 1000ms = 1秒
+    setInterval(updatePHValue, 1000);
+    setInterval(updateLuxValue, 1000);
+    setInterval(updateSpeedValue, 1000);
+    setInterval(updateESValue, 1000);
+    updatePHValue(); updateLuxValue(); updateSpeedValue(); updateESValue();
+
+    // 折线图更新（模拟水温数据）
+    function generateRandomValue() {
+      return Math.floor(Math.random() * (35 - 29 + 1)) + 29;
+    }
+    function generateInitialData() {
+      var data = [];
+      for (var i = 0; i < 12; i++) {
+        data.push(generateRandomValue());
+      }
+      return data;
+    }
+    var labels = [];
+    for (var i = 1; i <= 12; i++) { labels.push(i); }
+    var ctxLine = document.getElementById('myAreaChart').getContext('2d');
+    var myAreaChart = new Chart(ctxLine, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: '水温',
+          data: generateInitialData(),
+          borderColor: 'rgba(75, 192, 192, 1)',
+          tension: 0.4,
+          fill: false
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animations: { x: { duration: 1000 }, y: { duration: 0 } },
+        scales: {
+          y: { min: 20, max: 40, type: 'linear' },
+          x: { type: 'linear' }
+        },
+        plugins: {
+          zoom: {
+            zoom: {
+              wheel: { enabled: true },
+              drag: { enabled: true },
+              mode: 'xy'
+            },
+            pan: { enabled: true, mode: 'xy' }
+          }
+        }
+      }
+    });
+    setInterval(function () {
+      myAreaChart.data.labels.shift();
+      myAreaChart.data.labels.push(myAreaChart.data.labels[myAreaChart.data.labels.length - 1] + 1);
+      myAreaChart.data.datasets[0].data.shift();
+      myAreaChart.data.datasets[0].data.push(generateRandomValue());
+      myAreaChart.update();
+    }, 3000);
+
+    // 摄像头功能代码
+    const videoElement = document.getElementById('video');
+    const canvasElement = document.getElementById('canvas');
+    const photoElement = document.getElementById('photo');
+    const startButton = document.getElementById('startCamera');
+    const takePhotoButton = document.getElementById('takePhoto');
+    const switchCameraButton = document.getElementById('switchCamera');
+    let stream = null;
+    let facingMode = 'user';
+    startButton.addEventListener('click', async () => {
+      try {
+        const constraints = { video: { facingMode } };
+        stream = await navigator.mediaDevices.getUserMedia(constraints);
+        videoElement.srcObject = stream;
+        startButton.disabled = true;
+        takePhotoButton.disabled = false;
+        videoElement.style.display = 'block';
+        photoElement.style.display = 'none';
+      } catch (err) {
+        console.error('获取摄像头失败:', err);
+        toastr.error('无法访问摄像头，请检查权限和设备');
+      }
+    });
+    takePhotoButton.addEventListener('click', () => {
+      canvasElement.getContext('2d').drawImage(videoElement, 0, 0);
+      photoElement.src = canvasElement.toDataURL('image/png');
+      photoElement.style.display = 'block';
+    });
+    switchCameraButton.addEventListener('click', async () => {
+      if (!stream) return;
+      stream.getTracks().forEach(track => track.stop());
+      facingMode = facingMode === 'user' ? 'environment' : 'user';
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode } });
+        videoElement.srcObject = stream;
+      } catch (err) {
+        console.error('切换摄像头失败:', err);
+        toastr.warning('切换摄像头失败，可能没有多个摄像头');
+      }
+    });
+  </script>
+</body>
+</html>
