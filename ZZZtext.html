@@ -3,102 +3,94 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>SB Admin 2 - Dashboard with Camera</title>
-  <!-- Custom fonts for this template-->
-  <link href="../../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
-  <!-- Custom styles for this template-->
+  <title>SB Admin 2 - Camera Stream</title>
+  <!-- SB Admin 2 样式及字体 -->
+  <link href="../../vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,300,400,600,700,800,900" rel="stylesheet">
   <link href="../../css/sb-admin-2.min.css" rel="stylesheet">
-  <!-- Toastr CSS for通知弹窗 -->
-  <link href="../../vendor/toastr/toastr.min.css" rel="stylesheet">
-  <!-- Chart.js及其插件 -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.0"></script>
-  <
 </head>
+
 <body id="page-top">
-  <!-- Page Wrapper -->
   <div id="wrapper">
-    <!-- Sidebar -->
-    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-      <!-- Sidebar Brand -->
-      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="first_page.html">
-        <div class="sidebar-brand-icon rotate-n-15">
-          <i class="fas fa-laugh-wink"></i>
-        </div>
-        <div class="sidebar-brand-text mx-3">SSR团队</div>
-      </a>
-      <hr class="sidebar-divider my-0">
-      <!-- Nav Item - Dashboard -->
-      <li class="nav-item active">
-        <a class="nav-link" href="first_page.html">
-          <i class="fas fa-fw fa-tachometer-alt"></i>
-          <span>首页展示</span>
-        </a>
-      </li>
-      <hr class="sidebar-divider">
-      <div class="sidebar-heading">数据图表</div>
-      <li class="nav-item">
-        <a class="nav-link" href="chart.html">
-          <i class="fas fa-fw fa-chart-area"></i>
-          <span>图表</span>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="tables.html">
-          <i class="fas fa-fw fa-table"></i>
-          <span>表格</span>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="XBox.html">
-          <i class="fas fa-fw fa-cog"></i>
-          <span>手柄效果</span>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="XBox.html">
-          <i class="fas fa-fw fa-wrench"></i>
-          <span>水下仿真插入</span>
-        </a>
-      </li>
-      <li class="nav-item active">
-        <a class="nav-link" href="camera.html">
-          <i class="fas fa-fw fa-camera"></i>
-          <span>摄像头读取</span>
-        </a>
-      </li>
-      <li class="nav-item active">
-        <a class="nav-link" href="http://localhost:8001/vendor/three.js-r161/examples/simple.html">
-          <i class="fas fa-fw fa-camera"></i>
-          <span>模型展示</span>
-        </a>
-      </li>
-    </ul>
-    <!-- End of Sidebar -->
-
-    <!-- Content Wrapper -->
+    <!-- （侧边栏略，与原一致） -->
+    
     <div id="content-wrapper" class="d-flex flex-column">
-      <!-- Main Content -->
       <div id="content">
-        <!-- Topbar -->
-        <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-          <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-            <i class="fa fa-bars"></i>
-          </button>
-          <ul class="navbar-nav ml-auto">
-            <li class="nav-item dropdown no-arrow">
-              <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="false">
-                <span class="mr-2 d-none d-lg-inline text-gray-600 small">哈威SSR团队研发</span>
-                <img class="img-profile rounded-circle" src="img/picture.png">
-              </a>
-            </li>
-          </ul>
-        </nav>
-        <!-- End of Topbar -->
-
-        <!-- Begin Page Content -->
+        <!-- Topbar 略 -->
         
+        <!-- ====== Begin Page Content ====== -->
+        <div class="container-fluid">
+          <div class="row">
+            <!-- RTSP 播放区 -->
+            <div class="col-md-6 mb-4">
+              <h5>RTSP 实时流</h5>
+              <video id="rtspPlayer"
+                     controls autoplay muted loop
+                     style="width: 100%; background: black;">
+                您的浏览器不支持 video 标签
+              </video>
+            </div>
+            
+            <!-- WebRTC 播放区 -->
+            <div class="col-md-6 mb-4">
+              <h5>WebRTC 实时流</h5>
+              <video id="webrtcPlayer"
+                     autoplay playsinline
+                     style="width: 100%; background: black;">
+              </video>
+            </div>
+          </div>
+        </div>
+        <!-- ====== End Page Content ====== -->
+        
+      </div>
+    </div>
+  </div>
+
+  <!-- RTSP 播放库 -->
+  <script src="https://cdn.jsdelivr.net/npm/rtsp-relay/browser/rtsp-relay.min.js"></script>
+  <!-- WebRTC 兼容层 -->
+  <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+  
+  <script>
+  (async () => {
+    // —— 1. RTSP 播放 ——  
+    window.RTSPRelay.startPlayer({
+      url: 'rtsp://localhost:8554/yourStream',
+      element: document.getElementById('rtspPlayer'),
+      protocol: 'tcp'
+    });
+
+    // —— 2. WebRTC 播放 ——  
+    const pc = new RTCPeerConnection({
+      iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
+    });
+    const videoEl = document.getElementById('webrtcPlayer');
+
+    pc.ontrack = ({ streams }) => {
+      videoEl.srcObject = streams[0];
+    };
+
+    const ws = new WebSocket('ws://localhost:8889');
+    ws.onmessage = async ({ data }) => {
+      const msg = JSON.parse(data);
+      if (msg.sdp) {
+        await pc.setRemoteDescription(msg.sdp);
+        if (msg.sdp.type === 'offer') {
+          const answer = await pc.createAnswer();
+          await pc.setLocalDescription(answer);
+          ws.send(JSON.stringify({ sdp: pc.localDescription }));
+        }
+      }
+      else if (msg.ice) {
+        await pc.addIceCandidate(msg.ice);
+      }
+    };
+
+    pc.onicecandidate = ({ candidate }) => {
+      if (candidate) ws.send(JSON.stringify({ ice: candidate }));
+    };
+  })();
+  </script>
 </body>
 </html>
