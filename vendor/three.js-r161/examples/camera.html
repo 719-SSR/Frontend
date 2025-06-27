@@ -1,52 +1,31 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>哈威SSR团队作品前端展示</title>
-  <!-- SB Admin 2 样式 -->
+
+  <!-- 样式与库 -->
   <link href="css/sb-admin-2.min.css" rel="stylesheet">
-  <!-- Font Awesome -->
-  <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-  <!-- Toastr -->
+  <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
   <link href="vendor/toastr/toastr.min.css" rel="stylesheet">
-  <!-- RTSP 播放库 -->
+
   <script src="https://cdn.jsdelivr.net/npm/rtsp-relay/browser/rtsp-relay.min.js"></script>
-  <!-- WebRTC adapter -->
   <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
-  <!-- Toastr JS -->
   <script src="vendor/toastr/toastr.min.js"></script>
 
   <style>
-    .camera-container {
-      padding: 20px;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-    .camera-container video {
-      width: 100%;
-      background: #000;
-    }
-    #modeBtnGroup {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      z-index: 10000;
-      display: flex;
-      gap: 10px;
-    }
-    #modeBtnGroup .btn {
-      padding: 1px 1px;      /* 上下 4px，左右 8px */
-      min-width: 60px;       /* 最小宽度可按需调整 */
-    }
+    .camera-container{padding:20px;max-width:800px;margin:0 auto;}
+    .camera-container video{width:100%;background:#000;}
+    #modeBtnGroup{position:fixed;bottom:20px;right:20px;z-index:10000;display:flex;gap:10px;}
+    #modeBtnGroup .btn{padding:1px 6px;min-width:60px;}
   </style>
 </head>
 
 <body id="page-top">
-  <!-- Page Wrapper -->
-  <div id="wrapper">
-    <!-- Sidebar -->
+<div id="wrapper">
+  <!-- ===== 左侧导航略 ===== -->
+  <!-- Sidebar -->
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
       <!-- Sidebar Brand -->
       <a class="sidebar-brand d-flex align-items-center justify-content-center" href="first_page.html">
@@ -57,7 +36,7 @@
       </a>
       <hr class="sidebar-divider my-0">
       <!-- Nav Item - Dashboard -->
-      <li class="nav-item">
+      <li class="nav-item active">
         <a class="nav-link" href="first_page.html">
           <i class="fas fa-fw fa-tachometer-alt"></i>
           <span>首页展示</span>
@@ -83,7 +62,7 @@
           <span>手柄效果</span>
         </a>
       </li>
-      <li class="nav-item active">
+      <li class="nav-item">
         <a class="nav-link" href="camera.html">
           <i class="fas fa-fw fa-camera"></i>
           <span>摄像头读取</span>
@@ -118,212 +97,180 @@
           </ul>
         </nav>
         <!-- End of Topbar -->
+  <!-- ===== 主内容区 ===== -->
+  <div id="content-wrapper" class="d-flex flex-column">
+    <div id="content">
+      <!-- ===== 顶栏略 ===== -->
 
-    <div id="content-wrapper" class="d-flex flex-column">
-      <div id="content">
-        <!-- topbar … 保留不变 … -->
-        <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-          <!-- … -->
-        </nav>
+      <div class="container-fluid">
 
-        <div class="container-fluid">
-          <!-- 本地摄像头 -->
-          <div id="cameraContainer" class="camera-container">
-            <div class="card shadow mb-4">
-              <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">本地摄像头</h6>
+        <!-- 本地摄像头 -->
+        <div id="cameraContainer" class="camera-container">
+          <div class="card shadow mb-4">
+            <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">本地摄像头</h6></div>
+            <div class="card-body text-center">
+              <video id="localVideo" autoplay playsinline muted></video>
+              <div class="camera-controls mt-4">
+                <button id="startCamera"  class="btn btn-success"><i class="fas fa-video"></i> 开启摄像头</button>
+                <button id="takePhoto"    class="btn btn-primary"  disabled><i class="fas fa-camera"></i> 拍照</button>
+                <button id="switchCamera" class="btn btn-secondary"><i class="fas fa-sync-alt"></i> 切换摄像头</button>
               </div>
-              <div class="card-body text-center">
-                <video id="video" autoplay playsinline></video>
-                <div class="camera-controls mt-4">
-                  <button id="startCamera" class="btn btn-success">
-                    <i class="fas fa-video"></i> 开启摄像头
-                  </button>
-                  <button id="takePhoto" class="btn btn-primary" disabled>
-                    <i class="fas fa-camera"></i> 拍照
-                  </button>
-                  <button id="switchCamera" class="btn btn-secondary">
-                    <i class="fas fa-sync-alt"></i> 切换摄像头
-                  </button>
-                </div>
-                <canvas id="canvas" width="640" height="480" style="display:none;"></canvas>
-                <img id="photo" alt="captured photo" class="mt-3" style="display:none; max-width:100%;">
-              </div>
-            </div>
-          </div>
-
-          <!-- RTSP 流媒体 -->
-          <div id="rtspContainer" class="camera-container" style="display:none;">
-            <div class="card shadow mb-4">
-              <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">RTSP 实时流</h6>
-              </div>
-              <div class="card-body text-center">
-                <video id="rtspPlayer" controls autoplay muted loop></video>
-              </div>
-            </div>
-          </div>
-
-          <!-- WebRTC 流媒体 -->
-          <div id="webrtcContainer" class="camera-container" style="display:none;">
-            <div class="card shadow mb-4">
-              <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">WebRTC 实时流</h6>
-              </div>
-              <div class="card-body text-center">
-                <video id="webrtcPlayer" autoplay playsinline></video>
-              </div>
+              <canvas id="canvas" width="640" height="480" style="display:none"></canvas>
+              <img    id="photo"  style="display:none;max-width:100%">
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- footer … 保留不变 … -->
-      <footer class="sticky-footer bg-white">
-        <div class="container my-auto">
-          <div class="copyright text-center my-auto">
-            <span>© 2025 哈威SSR团队研发</span>
+        <!-- RTSP -->
+        <div id="rtspContainer" class="camera-container" style="display:none">
+          <div class="card shadow mb-4">
+            <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">RTSP 实时流</h6></div>
+            <div class="card-body text-center">
+              <video id="rtspVideo" controls autoplay muted playsinline></video>
+            </div>
           </div>
         </div>
-      </footer>
-    </div>
-  </div>
 
-  <!-- 三模式切换按钮 -->
-  <div id="modeBtnGroup">
-    <button id="modeCameraBtn" class="btn btn-primary">本地摄像头</button>
-    <button id="modeRTSPBtn" class="btn btn-secondary">RTSP 流</button>
-    <button id="modeWebRTCBtn" class="btn btn-secondary">WebRTC 流</button>
-  </div>
+        <!-- WebRTC -->
+        <div id="webrtcContainer" class="camera-container" style="display:none">
+          <div class="card shadow mb-4">
+            <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">WebRTC 实时流</h6></div>
+            <div class="card-body text-center">
+              <video id="webrtcVideo" controls autoplay muted playsinline></video>
+            </div>
+          </div>
+        </div>
 
-  <!-- 必要 JS -->
-  <script src="vendor/jquery/jquery.min.js"></script>
-  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-  <script src="js/sb-admin-2.min.js"></script>
+      </div><!-- /.container-fluid -->
+    </div><!-- /#content -->
 
-  <script>
-    // 本地摄像头相关
-    let cameraStream = null,
-        facingMode = 'user';
+    <footer class="sticky-footer bg-white"><div class="container my-auto"><div class="copyright text-center my-auto">© 2025 哈威SSR团队研发</div></div></footer>
+  </div><!-- /#content-wrapper -->
+</div><!-- /#wrapper -->
 
-    document.getElementById('startCamera').addEventListener('click', async () => {
-      try {
-        cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode } });
-        document.getElementById('video').srcObject = cameraStream;
-        document.getElementById('startCamera').disabled = true;
-        document.getElementById('takePhoto').disabled = false;
-      } catch (e) {
-        toastr.error('无法访问摄像头，请检查权限和设备');
+<!-- 三模式切换 -->
+<div id="modeBtnGroup">
+  <button id="modeCameraBtn" class="btn btn-primary">本地摄像头</button>
+  <button id="modeRTSPBtn"   class="btn btn-secondary">RTSP 流</button>
+  <button id="modeWebRTCBtn" class="btn btn-secondary">WebRTC 流</button>
+</div>
+
+<!-- 必要脚本 -->
+<script src="vendor/jquery/jquery.min.js"></script>
+<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+<script src="js/sb-admin-2.min.js"></script>
+
+<script>
+/* ---------- 本地摄像头 ---------- */
+let camStream=null,facing='user';
+const localVideo=document.getElementById('localVideo');
+
+$('#startCamera').on('click',async()=>{
+  try{
+    camStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:facing}});
+    localVideo.srcObject=camStream;
+    $('#startCamera').prop('disabled',true);
+    $('#takePhoto').prop('disabled',false);
+  }catch(e){toastr.error('无法访问摄像头');}
+});
+$('#switchCamera').on('click',async()=>{
+  if(camStream)camStream.getTracks().forEach(t=>t.stop());
+  facing=facing==='user'?'environment':'user';
+  try{
+    camStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:facing}});
+    localVideo.srcObject=camStream;
+  }catch{toastr.warning('切换失败');}
+});
+$('#takePhoto').on('click',()=>{
+  const c=document.getElementById('canvas'),ctx=c.getContext('2d');
+  ctx.drawImage(localVideo,0,0,c.width,c.height);
+  $('#photo').attr('src',c.toDataURL('image/png')).show();
+});
+function stopCamera(){if(camStream)camStream.getTracks().forEach(t=>t.stop());camStream=null;$('#startCamera').prop('disabled',false);$('#takePhoto').prop('disabled',true);}
+
+/* ---------- RTSP ---------- */
+let rtspPlayer=null;
+function startRTSP(){
+  if(rtspPlayer) return;            // 已启动直接返回
+  rtspPlayer=window.RTSPRelay.startPlayer({
+    // url:'rtsp://localhost:8554/yourStream',
+    // url: 'rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov',
+    url: 'rtsp://rtspstream:jNQoVgriRmI08TnF_DLQt@zephyr.rtsp.stream/movie',
+    element:document.getElementById('rtspVideo'),
+    protocol:'tcp'
+  });
+}
+function stopRTSP(){
+  if(rtspPlayer){rtspPlayer.close();rtspPlayer=null;}
+  document.getElementById('rtspVideo').src='';
+}
+
+/* ---------- WebRTC ---------- */
+let pc=null,ws=null;
+function startWebRTC(){
+  if(pc) return;
+  const video=document.getElementById('webrtcVideo');
+  pc=new RTCPeerConnection({iceServers:[{urls:'stun:stun.l.google.com:19302'}]});
+  pc.ontrack=e=>video.srcObject=e.streams[0];
+  ws=new WebSocket('ws://localhost:8889');
+  ws.onmessage=async({data})=>{
+    const msg=JSON.parse(data);
+    if(msg.sdp){
+      await pc.setRemoteDescription(msg.sdp);
+      if(msg.sdp.type==='offer'){
+        const ans=await pc.createAnswer();
+        await pc.setLocalDescription(ans);
+        ws.send(JSON.stringify({sdp:pc.localDescription}));
       }
-    });
+    }else if(msg.ice){await pc.addIceCandidate(msg.ice);}
+  };
+  pc.onicecandidate=e=>{if(e.candidate)ws.send(JSON.stringify({ice:e.candidate}));};
+}
+function stopWebRTC(){if(pc){pc.close();pc=null;}if(ws){ws.close();ws=null;}document.getElementById('webrtcVideo').srcObject=null;}
 
-    document.getElementById('takePhoto').addEventListener('click', () => {
-      const canvas = document.getElementById('canvas');
-      canvas.getContext('2d').drawImage(document.getElementById('video'), 0, 0, canvas.width, canvas.height);
-      document.getElementById('photo').src = canvas.toDataURL('image/png');
-      document.getElementById('photo').style.display = 'block';
-    });
+/* ---------- 模式切换 ---------- */
+function setMode(show){
+  $('#cameraContainer,#rtspContainer,#webrtcContainer').hide();
+  $('#'+show).show();
+  $('#modeBtnGroup .btn').removeClass('btn-primary').addClass('btn-secondary');
+  $('#mode'+(show==='cameraContainer'?'Camera':show==='rtspContainer'?'RTSP':'WebRTC')+'Btn').removeClass('btn-secondary').addClass('btn-primary');
+}
+$('#modeCameraBtn').on('click',()=>{stopRTSP();stopWebRTC();setMode('cameraContainer');});
+$('#modeRTSPBtn').  on('click',()=>{
+  stopCamera();
+  stopWebRTC();
+  setMode('rtspContainer');
+  // 设置video源为demo2.mp4
+  const rtspVideo = document.getElementById('rtspVideo');
+  rtspVideo.src = './demo2.mp4';
+  rtspVideo.load();
+  rtspVideo.play();
+});
+$('#modeWebRTCBtn').on('click',()=>{
+  stopCamera();
+  stopRTSP();
+  setMode('webrtcContainer');
+  // 设置video源为demo2.mp4
+  const webrtcVideo = document.getElementById('webrtcVideo');
+  webrtcVideo.src = './demo2.mp4';
+  webrtcVideo.load();
+  webrtcVideo.play();
+});
 
-    document.getElementById('switchCamera').addEventListener('click', async () => {
-      if (cameraStream) cameraStream.getTracks().forEach(t => t.stop());
-      facingMode = (facingMode === 'user') ? 'environment' : 'user';
-      try {
-        cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode } });
-        document.getElementById('video').srcObject = cameraStream;
-      } catch {
-        toastr.warning('切换摄像头失败，可能没有多个摄像头');
-      }
-    });
+/* 默认本地摄像头 */
+$('#modeCameraBtn').click();
 
-    function stopCamera() {
-      if (cameraStream) cameraStream.getTracks().forEach(t => t.stop());
-      cameraStream = null;
-      document.getElementById('startCamera').disabled = false;
-      document.getElementById('takePhoto').disabled = true;
-    }
+/* ---------- demo.mp4 兼容 ---------- */
+function playDemo(videoEl){
+  stopRTSP();stopWebRTC();
+  const v=document.getElementById(videoEl);
+  v.src='demo.mp4'; v.load(); v.play();
+}
 
-    // RTSP/WebRTC 相关
-    let pc = null, ws = null;
-
-    function startRTSP() {
-      window.RTSPRelay.startPlayer({
-        url: 'rtsp://localhost:8554/yourStream',
-        element: document.getElementById('rtspPlayer'),
-        protocol: 'tcp'
-      });
-    }
-
-    function startWebRTC() {
-      pc = new RTCPeerConnection({ iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] });
-      pc.ontrack = ({ streams }) => document.getElementById('webrtcPlayer').srcObject = streams[0];
-      ws = new WebSocket('ws://localhost:8889');
-
-      ws.onmessage = async ({ data }) => {
-        const msg = JSON.parse(data);
-        if (msg.sdp) {
-          await pc.setRemoteDescription(msg.sdp);
-          if (msg.sdp.type === 'offer') {
-            const answer = await pc.createAnswer();
-            await pc.setLocalDescription(answer);
-            ws.send(JSON.stringify({ sdp: pc.localDescription }));
-          }
-        } else if (msg.ice) {
-          await pc.addIceCandidate(msg.ice);
-        }
-      };
-
-      pc.onicecandidate = ({ candidate }) => {
-        if (candidate) ws.send(JSON.stringify({ ice: candidate }));
-      };
-    }
-
-    function stopWebRTC() {
-      if (pc) { pc.close(); pc = null; }
-      if (ws) { ws.close(); ws = null; }
-    }
-
-    // 模式切换
-    const cameraDiv = document.getElementById('cameraContainer'),
-          rtspDiv = document.getElementById('rtspContainer'),
-          webrtcDiv = document.getElementById('webrtcContainer');
-
-    document.getElementById('modeCameraBtn').addEventListener('click', () => {
-      // 显示本地摄像头
-      stopWebRTC();
-      rtspDiv.style.display = 'none';
-      webrtcDiv.style.display = 'none';
-      cameraDiv.style.display = 'block';
-      stopWebRTC();
-      document.getElementById('modeCameraBtn').classList.replace('btn-secondary','btn-primary');
-      ['modeRTSPBtn','modeWebRTCBtn'].forEach(id => document.getElementById(id).classList.replace('btn-primary','btn-secondary'));
-    });
-
-    document.getElementById('modeRTSPBtn').addEventListener('click', () => {
-      // 显示 RTSP
-      stopCamera();
-      stopWebRTC();
-      cameraDiv.style.display = 'none';
-      webrtcDiv.style.display = 'none';
-      rtspDiv.style.display = 'block';
-      startRTSP();
-      document.getElementById('modeRTSPBtn').classList.replace('btn-secondary','btn-primary');
-      ['modeCameraBtn','modeWebRTCBtn'].forEach(id => document.getElementById(id).classList.replace('btn-primary','btn-secondary'));
-    });
-
-    document.getElementById('modeWebRTCBtn').addEventListener('click', () => {
-      // 显示 WebRTC
-      stopCamera();
-      rtspDiv.style.display = 'none';
-      cameraDiv.style.display = 'none';
-      webrtcDiv.style.display = 'block';
-      startWebRTC();
-      document.getElementById('modeWebRTCBtn').classList.replace('btn-secondary','btn-primary');
-      ['modeCameraBtn','modeRTSPBtn'].forEach(id => document.getElementById(id).classList.replace('btn-primary','btn-secondary'));
-    });
-
-    // 初始模式：本地摄像头
-    document.getElementById('modeCameraBtn').click();
-  </script>
+/* 若需要手动测试 demo，可打开下列语句 */
+playDemo('rtspVideo');   // 测 RTSP 区域
+playDemo('webrtcVideo'); // 测 WebRTC 区域
+</script>
 </body>
 </html>
