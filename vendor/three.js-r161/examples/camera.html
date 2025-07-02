@@ -9,95 +9,110 @@
   <link href="css/sb-admin-2.min.css" rel="stylesheet">
   <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
   <link href="vendor/toastr/toastr.min.css" rel="stylesheet">
+  <link href="https://web.sdk.qcloud.com/player/tcplayer/release/v4.7.1/tcplayer.min.css" rel="stylesheet">
 
-  <script src="https://cdn.jsdelivr.net/npm/rtsp-relay/browser/rtsp-relay.min.js"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/rtsp-relay/browser/rtsp-relay.min.js"></script> -->
   <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
-  <script src="vendor/toastr/toastr.min.js"></script>
+  <!-- <script src="vendor/toastr/toastr.min.js"></script> -->
+  <script src="https://web.sdk.qcloud.com/player/tcplayer/release/v4.7.1/tcplayer.v4.7.1.min.js"></script>
 
   <style>
     .camera-container{padding:20px;max-width:800px;margin:0 auto;}
     .camera-container video{width:100%;background:#000;}
     #modeBtnGroup{position:fixed;bottom:20px;right:20px;z-index:10000;display:flex;gap:10px;}
     #modeBtnGroup .btn{padding:1px 6px;min-width:60px;}
+    .rtsp-controls .btn{pointer-events:auto;cursor:pointer;}
+    .rtsp-controls .btn:disabled{pointer-events:none;cursor:not-allowed;}
+    .webrtc-controls .btn{pointer-events:auto;cursor:pointer;}
+    .webrtc-controls .btn:disabled{pointer-events:none;cursor:not-allowed;}
+    #webrtcVideoContainer{border-radius:0.35rem;overflow:hidden;}
+    #webrtcVideo{border-radius:0.35rem;}
   </style>
 </head>
 
 <body id="page-top">
-<div id="wrapper">
-  <!-- ===== 左侧导航略 ===== -->
-  <!-- Sidebar -->
-    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-      <!-- Sidebar Brand -->
-      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="first_page.html">
-        <div class="sidebar-brand-icon rotate-n-15">
-          <i class="fas fa-laugh-wink"></i>
-        </div>
-        <div class="sidebar-brand-text mx-3">SSR团队</div>
-      </a>
-      <hr class="sidebar-divider my-0">
-      <!-- Nav Item - Dashboard -->
-      <li class="nav-item active">
-        <a class="nav-link" href="first_page.html">
-          <i class="fas fa-fw fa-tachometer-alt"></i>
-          <span>首页展示</span>
-        </a>
-      </li>
-      <hr class="sidebar-divider">
-      <div class="sidebar-heading">数据图表</div>
-      <li class="nav-item">
-        <a class="nav-link" href="chart.html">
-          <i class="fas fa-fw fa-chart-area"></i>
-          <span>图表</span>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="tables.html">
-          <i class="fas fa-fw fa-table"></i>
-          <span>表格</span>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="XBox.html">
-          <i class="fas fa-fw fa-cog"></i>
-          <span>手柄效果</span>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="camera.html">
-          <i class="fas fa-fw fa-camera"></i>
-          <span>摄像头读取</span>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="http://localhost:8001/vendor/three.js-r161/examples/simple.html">
-          <i class="fas fa-fw fa-wrench"></i>
-          <span>模型展示</span>
-        </a>
-      </li>
-    </ul>
-    <!-- End of Sidebar -->
+<!-- Page Wrapper -->
+    <div id="wrapper">
 
-    <!-- Content Wrapper -->
-    <div id="content-wrapper" class="d-flex flex-column">
-      <!-- Main Content -->
-      <div id="content">
-        <!-- Topbar -->
-        <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-          <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-            <i class="fa fa-bars"></i>
-          </button>
-          <ul class="navbar-nav ml-auto">
-            <li class="nav-item dropdown no-arrow">
-              <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="false">
-                <span class="mr-2 d-none d-lg-inline text-gray-600 small">哈威SSR团队研发</span>
-                <img class="img-profile rounded-circle" src="img/picture.png">
-              </a>
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+            <!-- Sidebar Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="first_page.html">
+                <div class="sidebar-brand-icon rotate-n-15">
+                    <i class="fas fa-laugh-wink"></i>
+                </div>
+                <div class="sidebar-brand-text mx-3">
+                    <font _mstmutation="1" _msttexthash="10666266" _msthash="1">SSR团队</font>
+                </div>
+            </a>
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+            <!-- Nav Item - Dashboard -->
+            <li class="nav-item">
+                <a class="nav-link" href="first_page.html">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span _msttexthash="8308430" _msthash="3">首页展示</span></a>
             </li>
-          </ul>
-        </nav>
-        <!-- End of Topbar -->
-  <!-- ===== 主内容区 ===== -->
+            <hr class="sidebar-divider">
+            <div class="sidebar-heading" _msttexthash="4554719" _msthash="4">数据图表</div>
+            <li class="nav-item">
+                <a class="nav-link" href="text.html">
+                    <i class="fas fa-fw fa-chart-area"></i>
+                    <span _msttexthash="5658250" _msthash="24">图表</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="tables.html">
+                    <i class="fas fa-fw fa-table"></i>
+                    <span _msttexthash="3177720" _msthash="25">表格</span></a>
+            </li>
+            <!-- 你可以添加更多导航项 -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="XBox.html">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span _msttexthash="5055388" _msthash="5">手柄效果</span>
+                </a>
+            </li>
+            <li class="nav-item  active">
+                <a class="nav-link collapsed" href="camera.html">
+                    <i class="fas fa-fw fa-camera"></i>
+                    <span _msttexthash="5055388" _msthash="5">摄像头读取</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="http://localhost:8001/vendor/three.js-r161/examples/sinmple.html">
+                    <i class="fas fa-fw fa-wrench"></i>
+                    <span>模型展示</span>
+                </a>
+            </li>
+        </ul>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                    <!-- Sidebar Toggle (Topbar) -->
+                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                        <i class="fa fa-bars"></i>
+                    </button>
+                    <!-- Topbar Navbar -->
+                    <ul class="navbar-nav ml-auto">
+                        <!-- 可添加更多内容 -->
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small" _msttexthash="22648327"
+                                    _msthash="55">SSR团队研发</span>
+                                <img class="img-profile rounded-circle" src="img/picture.png">
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+                <!-- End of Topbar -->
   <div id="content-wrapper" class="d-flex flex-column">
     <div id="content">
       <!-- ===== 顶栏略 ===== -->
@@ -127,6 +142,17 @@
             <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">RTSP 实时流</h6></div>
             <div class="card-body text-center">
               <video id="rtspVideo" controls autoplay muted playsinline></video>
+              <div class="rtsp-controls mt-4">
+                <button id="connectRtspBtn" class="btn btn-success mr-2">
+                  <i class="fas fa-play"></i> 连接流
+                </button>
+                <button id="disconnectRtspBtn" class="btn btn-danger" disabled>
+                  <i class="fas fa-stop"></i> 断开连接
+                </button>
+                <div class="mt-2">
+                  <small class="text-muted">流地址: rtsp://stream.strba.sk:1935/strba/VYHLAD_JAZERO.stream</small>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -136,7 +162,26 @@
           <div class="card shadow mb-4">
             <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">WebRTC 实时流</h6></div>
             <div class="card-body text-center">
-              <video id="webrtcVideo" controls autoplay muted playsinline></video>
+              <div id="webrtcVideoContainer" style="width:100%;height:450px;background:#000;">
+                <video id="webrtcVideo" style="width:100%;height:100%;" controls autoplay muted playsinline></video>
+              </div>
+              <div class="webrtc-controls mt-4">
+                <button id="connectWebrtcBtn" class="btn btn-success mr-2">
+                  <i class="fas fa-play"></i> 连接流
+                </button>
+                <!-- <button id="disconnectWebrtcBtn" class="btn btn-danger mr-2" disabled>
+                  <i class="fas fa-stop"></i> 断开连接
+                </button>
+                <button id="pauseWebrtcBtn" class="btn btn-warning mr-2" disabled>
+                  <i class="fas fa-pause"></i> 暂停
+                </button>
+                <button id="playWebrtcBtn" class="btn btn-info" disabled>
+                  <i class="fas fa-play"></i> 播放
+                </button> -->
+                <div class="mt-2">
+                  <small class="text-muted">WebRTC流地址: 腾讯云演示流</small>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -160,6 +205,9 @@
 <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
 <script src="js/sb-admin-2.min.js"></script>
+<script src="js/webrtcstreamer.js"></script>
+<script src="js/rtsp-stream.js"></script>
+<script src="js/webrtc-stream.js"></script>
 
 <script>
 /* ---------- 本地摄像头 ---------- */
@@ -190,44 +238,77 @@ $('#takePhoto').on('click',()=>{
 function stopCamera(){if(camStream)camStream.getTracks().forEach(t=>t.stop());camStream=null;$('#startCamera').prop('disabled',false);$('#takePhoto').prop('disabled',true);}
 
 /* ---------- RTSP ---------- */
-let rtspPlayer=null;
-function startRTSP(){
-  if(rtspPlayer) return;            // 已启动直接返回
-  rtspPlayer=window.RTSPRelay.startPlayer({
-    // url:'rtsp://localhost:8554/yourStream',
-    // url: 'rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov',
-    url: 'rtsp://rtspstream:jNQoVgriRmI08TnF_DLQt@zephyr.rtsp.stream/movie',
-    element:document.getElementById('rtspVideo'),
-    protocol:'tcp'
-  });
+async function startRTSP(){
+  if(window.rtspManager){
+    $('#connectRtspBtn').prop('disabled', true);
+    $('#disconnectRtspBtn').prop('disabled', false);
+    
+    const success = await window.rtspManager.connectStream('rtspVideo');
+    if(!success){
+      // 如果WebRTC连接失败，回退到本地demo视频
+      const rtspVideo = document.getElementById('rtspVideo');
+      rtspVideo.src = './demo2.mp4';
+      rtspVideo.load();
+      rtspVideo.play();
+      console.log('RTSP连接失败，使用本地demo视频');
+      $('#connectRtspBtn').prop('disabled', false);
+      $('#disconnectRtspBtn').prop('disabled', true);
+    }
+  }
 }
 function stopRTSP(){
-  if(rtspPlayer){rtspPlayer.close();rtspPlayer=null;}
-  document.getElementById('rtspVideo').src='';
+  if(window.rtspManager){
+    window.rtspManager.disconnectStream();
+  }
+  const rtspVideo = document.getElementById('rtspVideo');
+  rtspVideo.src = '';
+  rtspVideo.srcObject = null;
+  
+  // 重置按钮状态
+  $('#connectRtspBtn').prop('disabled', false);
+  $('#disconnectRtspBtn').prop('disabled', true);
 }
 
 /* ---------- WebRTC ---------- */
-let pc=null,ws=null;
-function startWebRTC(){
-  if(pc) return;
-  const video=document.getElementById('webrtcVideo');
-  pc=new RTCPeerConnection({iceServers:[{urls:'stun:stun.l.google.com:19302'}]});
-  pc.ontrack=e=>video.srcObject=e.streams[0];
-  ws=new WebSocket('ws://localhost:8889');
-  ws.onmessage=async({data})=>{
-    const msg=JSON.parse(data);
-    if(msg.sdp){
-      await pc.setRemoteDescription(msg.sdp);
-      if(msg.sdp.type==='offer'){
-        const ans=await pc.createAnswer();
-        await pc.setLocalDescription(ans);
-        ws.send(JSON.stringify({sdp:pc.localDescription}));
-      }
-    }else if(msg.ice){await pc.addIceCandidate(msg.ice);}
-  };
-  pc.onicecandidate=e=>{if(e.candidate)ws.send(JSON.stringify({ice:e.candidate}));};
+async function startWebRTC(){
+  if(window.webrtcManager){
+    $('#connectWebrtcBtn').prop('disabled', true);
+    $('#disconnectWebrtcBtn').prop('disabled', false);
+    $('#pauseWebrtcBtn').prop('disabled', false);
+    $('#playWebrtcBtn').prop('disabled', false);
+    
+    const success = await window.webrtcManager.connectStream('webrtcVideo');
+    if(!success){
+      // 连接失败，回退到本地demo视频
+      console.log('WebRTC连接失败，使用本地demo视频');
+      const video = document.getElementById('webrtcVideo');
+      video.src = './demo2.mp4';
+      video.load();
+      video.play();
+      $('#connectWebrtcBtn').prop('disabled', false);
+      $('#disconnectWebrtcBtn').prop('disabled', true);
+      $('#pauseWebrtcBtn').prop('disabled', true);
+      $('#playWebrtcBtn').prop('disabled', true);
+    }
+  }
 }
-function stopWebRTC(){if(pc){pc.close();pc=null;}if(ws){ws.close();ws=null;}document.getElementById('webrtcVideo').srcObject=null;}
+
+function stopWebRTC(){
+  if(window.webrtcManager){
+    window.webrtcManager.disconnectStream();
+  }
+  
+  // 清理video元素
+  const video = document.getElementById('webrtcVideo');
+  video.src = '';
+  video.srcObject = null;
+  
+  // 重置按钮状态
+  $('#connectWebrtcBtn').prop('disabled', false);
+  $('#disconnectWebrtcBtn').prop('disabled', true);
+  $('#pauseWebrtcBtn').prop('disabled', true);
+  $('#playWebrtcBtn').prop('disabled', true);
+}
 
 /* ---------- 模式切换 ---------- */
 function setMode(show){
@@ -237,29 +318,181 @@ function setMode(show){
   $('#mode'+(show==='cameraContainer'?'Camera':show==='rtspContainer'?'RTSP':'WebRTC')+'Btn').removeClass('btn-secondary').addClass('btn-primary');
 }
 $('#modeCameraBtn').on('click',()=>{stopRTSP();stopWebRTC();setMode('cameraContainer');});
-$('#modeRTSPBtn').  on('click',()=>{
+$('#modeRTSPBtn').on('click',()=>{
   stopCamera();
   stopWebRTC();
   setMode('rtspContainer');
-  // 设置video源为demo2.mp4
-  const rtspVideo = document.getElementById('rtspVideo');
-  rtspVideo.src = './demo2.mp4';
-  rtspVideo.load();
-  rtspVideo.play();
+  // 重置RTSP按钮状态，让用户手动控制连接
+  $('#connectRtspBtn').prop('disabled', false);
+  $('#disconnectRtspBtn').prop('disabled', true);
 });
 $('#modeWebRTCBtn').on('click',()=>{
   stopCamera();
   stopRTSP();
   setMode('webrtcContainer');
-  // 设置video源为demo2.mp4
-  const webrtcVideo = document.getElementById('webrtcVideo');
-  webrtcVideo.src = './demo2.mp4';
-  webrtcVideo.load();
-  webrtcVideo.play();
+  // 重置WebRTC按钮状态，让用户手动控制连接
+  $('#connectWebrtcBtn').prop('disabled', false);
+  $('#disconnectWebrtcBtn').prop('disabled', true);
+  $('#pauseWebrtcBtn').prop('disabled', true);
+  $('#playWebrtcBtn').prop('disabled', true);
 });
 
 /* 默认本地摄像头 */
 $('#modeCameraBtn').click();
+
+/* 初始化流管理器 */
+$(document).ready(async function(){
+  console.log('页面初始化开始');
+  
+  // 初始化RTSP管理器
+  if(window.rtspManager){
+    console.log('RTSP管理器存在，开始初始化');
+    const rtspSuccess = await window.rtspManager.initialize();
+    console.log('RTSP管理器初始化结果:', rtspSuccess);
+  } else {
+    console.error('RTSP管理器未找到！请检查rtsp-stream.js是否正确加载');
+  }
+  
+  // 初始化WebRTC管理器
+  if(window.webrtcManager){
+    console.log('WebRTC管理器存在，开始初始化');
+    const webrtcSuccess = await window.webrtcManager.initialize();
+    console.log('WebRTC管理器初始化结果:', webrtcSuccess);
+  } else {
+    console.error('WebRTC管理器未找到！请检查webrtc-stream.js是否正确加载');
+  }
+  
+  // 确保按钮状态正确
+  $('#connectRtspBtn').prop('disabled', false);
+  $('#disconnectRtspBtn').prop('disabled', true);
+  $('#connectWebrtcBtn').prop('disabled', false);
+  $('#disconnectWebrtcBtn').prop('disabled', true);
+  $('#pauseWebrtcBtn').prop('disabled', true);
+  $('#playWebrtcBtn').prop('disabled', true);
+  console.log('所有按钮状态已重置');
+});
+
+/* RTSP控制按钮事件 */
+$('#connectRtspBtn').on('click', async function(){
+  console.log('连接流按钮被点击');
+  
+  if(!window.rtspManager) {
+    console.error('RTSP管理器未初始化');
+    if(typeof toastr !== 'undefined') {
+      toastr.error('RTSP管理器未初始化，请刷新页面重试');
+    }
+    return;
+  }
+  
+  $('#connectRtspBtn').prop('disabled', true);
+  $('#disconnectRtspBtn').prop('disabled', false);
+  console.log('按钮状态已更新：连接按钮禁用，断开按钮启用');
+  
+  try {
+    const success = await window.rtspManager.connectStream('rtspVideo');
+    console.log('RTSP连接结果:', success);
+    
+    if(!success){
+      // 连接失败，回退到本地演示视频
+      console.log('RTSP连接失败，使用本地演示视频');
+      const rtspVideo = document.getElementById('rtspVideo');
+      rtspVideo.src = './demo2.mp4';
+      rtspVideo.load();
+      rtspVideo.play();
+      $('#connectRtspBtn').prop('disabled', false);
+      $('#disconnectRtspBtn').prop('disabled', true);
+      console.log('已回退到本地视频，按钮状态已重置');
+    }
+  } catch(error) {
+    console.error('连接RTSP时发生错误:', error);
+    $('#connectRtspBtn').prop('disabled', false);
+    $('#disconnectRtspBtn').prop('disabled', true);
+    if(typeof toastr !== 'undefined') {
+      toastr.error('连接失败: ' + error.message);
+    }
+  }
+});
+
+$('#disconnectRtspBtn').on('click', function(){
+  console.log('断开连接按钮被点击');
+  stopRTSP();
+  $('#connectRtspBtn').prop('disabled', false);
+  $('#disconnectRtspBtn').prop('disabled', true);
+  console.log('RTSP连接已断开，按钮状态已重置');
+});
+
+/* WebRTC控制按钮事件 */
+$('#connectWebrtcBtn').on('click', async function(){
+  console.log('WebRTC连接流按钮被点击');
+  
+  if(!window.webrtcManager) {
+    console.error('WebRTC管理器未初始化');
+    if(typeof toastr !== 'undefined') {
+      toastr.error('WebRTC管理器未初始化，请刷新页面重试');
+    }
+    return;
+  }
+  
+  $('#connectWebrtcBtn').prop('disabled', true);
+  $('#disconnectWebrtcBtn').prop('disabled', false);
+  $('#pauseWebrtcBtn').prop('disabled', false);
+  $('#playWebrtcBtn').prop('disabled', false);
+  console.log('WebRTC按钮状态已更新');
+  
+  try {
+    const success = await window.webrtcManager.connectStream('webrtcVideo');
+    console.log('WebRTC连接结果:', success);
+    
+         if(!success){
+       // 连接失败，回退到本地演示视频
+       console.log('WebRTC连接失败，使用本地演示视频');
+       const video = document.getElementById('webrtcVideo');
+       video.src = './demo2.mp4';
+       video.load();
+       video.play();
+       $('#connectWebrtcBtn').prop('disabled', false);
+       $('#disconnectWebrtcBtn').prop('disabled', true);
+       $('#pauseWebrtcBtn').prop('disabled', true);
+       $('#playWebrtcBtn').prop('disabled', true);
+       console.log('已回退到本地视频，WebRTC按钮状态已重置');
+     }
+  } catch(error) {
+    console.error('连接WebRTC时发生错误:', error);
+    $('#connectWebrtcBtn').prop('disabled', false);
+    $('#disconnectWebrtcBtn').prop('disabled', true);
+    $('#pauseWebrtcBtn').prop('disabled', true);
+    $('#playWebrtcBtn').prop('disabled', true);
+    if(typeof toastr !== 'undefined') {
+      toastr.error('WebRTC连接失败: ' + error.message);
+    }
+  }
+});
+
+$('#disconnectWebrtcBtn').on('click', function(){
+  console.log('WebRTC断开连接按钮被点击');
+  stopWebRTC();
+  console.log('WebRTC连接已断开，按钮状态已重置');
+});
+
+$('#pauseWebrtcBtn').on('click', function(){
+  console.log('WebRTC暂停按钮被点击');
+  if(window.webrtcManager){
+    window.webrtcManager.pause();
+    if(typeof toastr !== 'undefined') {
+      toastr.info('WebRTC流已暂停');
+    }
+  }
+});
+
+$('#playWebrtcBtn').on('click', function(){
+  console.log('WebRTC播放按钮被点击');
+  if(window.webrtcManager){
+    window.webrtcManager.play();
+    if(typeof toastr !== 'undefined') {
+      toastr.info('WebRTC流已恢复播放');
+    }
+  }
+});
 
 /* ---------- demo.mp4 兼容 ---------- */
 function playDemo(videoEl){
@@ -269,8 +502,8 @@ function playDemo(videoEl){
 }
 
 /* 若需要手动测试 demo，可打开下列语句 */
-playDemo('rtspVideo');   // 测 RTSP 区域
-playDemo('webrtcVideo'); // 测 WebRTC 区域
+// playDemo('rtspVideo');   // 测 RTSP 区域
+// playDemo('webrtcVideo'); // 测 WebRTC 区域
 </script>
 </body>
 </html>

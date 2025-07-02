@@ -5,15 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>哈威SSR团队作品前端展示</title>
   <!-- Custom fonts for this template-->
-  <link href="../../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
-  <!-- Custom styles for this template-->
-  <link href="../../css/sb-admin-2.min.css" rel="stylesheet">
-  <!-- Toastr CSS for通知弹窗 -->
-  <link href="../../vendor/toastr/toastr.min.css" rel="stylesheet">
-  <!-- Chart.js及其插件 -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.0"></script>
+  <link href="css/sb-admin-2.min.css" rel="stylesheet">
+    <!-- 引入Font Awesome图标库 -->
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <!-- 引入Toastr CSS（用于通知弹窗） -->
+    <link href="vendor/toastr/toastr.min.css" rel="stylesheet">
+    <!-- 引入Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <!-- 引入Toastr JS -->
+    <script src="vendor/toastr/toastr.min.js"></script>
   <style>
     /* 自定义图表容器样式 */
     .chart-container {
@@ -86,54 +86,49 @@
   <div id="wrapper">
     <!-- Sidebar -->
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-      <!-- Sidebar Brand -->
       <a class="sidebar-brand d-flex align-items-center justify-content-center" href="first_page.html">
-        <div class="sidebar-brand-icon rotate-n-15">
-          <i class="fas fa-laugh-wink"></i>
-        </div>
-        <div class="sidebar-brand-text mx-3">SSR团队</div>
+          <div class="sidebar-brand-icon rotate-n-15">
+              <i class="fas fa-laugh-wink"></i>
+          </div>
+          <div class="sidebar-brand-text mx-3">SSR团队</div>
       </a>
       <hr class="sidebar-divider my-0">
-      <!-- Nav Item - Dashboard -->
       <li class="nav-item active">
-        <a class="nav-link" href="first_page.html">
-          <i class="fas fa-fw fa-tachometer-alt"></i>
-          <span>首页展示</span>
-        </a>
+          <a class="nav-link" href="first_page.html">
+              <i class="fas fa-fw fa-tachometer-alt"></i>
+              <span>首页展示</span></a>
       </li>
       <hr class="sidebar-divider">
       <div class="sidebar-heading">数据图表</div>
       <li class="nav-item">
-        <a class="nav-link" href="chart.html">
-          <i class="fas fa-fw fa-chart-area"></i>
-          <span>图表</span>
-        </a>
+          <a class="nav-link" href="chart.html">
+              <i class="fas fa-fw fa-chart-area"></i>
+              <span>图表</span></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="tables.html">
-          <i class="fas fa-fw fa-table"></i>
-          <span>表格</span>
-        </a>
+          <a class="nav-link" href="tables.html">
+              <i class="fas fa-fw fa-table"></i>
+              <span>表格</span></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link collapsed" href="XBox.html">
-          <i class="fas fa-fw fa-cog"></i>
-          <span>手柄效果</span>
-        </a>
+          <a class="nav-link collapsed" href="XBox.html">
+              <i class="fas fa-fw fa-cog"></i>
+              <span>手柄效果</span>
+          </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="camera.html">
-          <i class="fas fa-fw fa-camera"></i>
-          <span>摄像头读取</span>
-        </a>
+          <a class="nav-link" href="camera.html">
+              <i class="fas fa-fw fa-camera"></i>
+              <span>摄像头读取</span>
+          </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="http://localhost:8001/vendor/three.js-r161/examples/simple.html">
-          <i class="fas fa-fw fa-wrench"></i>
-          <span>模型展示</span>
-        </a>
+          <a class="nav-link" href="http://localhost:8001/vendor/three.js-r161/examples/sinmple.html">
+              <i class="fas fa-fw fa-wrench"></i>
+              <span>模型展示</span>
+          </a>
       </li>
-    </ul>
+  </ul>
     <!-- End of Sidebar -->
 
     <!-- Content Wrapper -->
@@ -259,43 +254,7 @@
               </div>
             </div>
             <!-- 饼图 -->
-            <div class="col-xl-4 col-lg-5">
-              <div class="card shadow mb-4">
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">Revenue Sources</h6>
-                  <div class="dropdown no-arrow">
-                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
-                      aria-haspopup="true" aria-expanded="false">
-                      <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                      aria-labelledby="dropdownMenuLink">
-                      <div class="dropdown-header">Dropdown Header:</div>
-                      <a class="dropdown-item" href="#">Action</a>
-                      <a class="dropdown-item" href="#">Another action</a>
-                      <div class="dropdown-divider"></div>
-                      <a class="dropdown-item" href="#">Something else here</a>
-                    </div>
-                  </div>
-                </div>
-                <div class="card-body">
-                  <div class="chart-pie pt-4 pb-2">
-                    <canvas id="myPieChart"></canvas>
-                  </div>
-                  <div class="mt-4 text-center small">
-                    <span class="mr-2">
-                      <i class="fas fa-circle text-primary"></i> Direct
-                    </span>
-                    <span class="mr-2">
-                      <i class="fas fa-circle text-success"></i> Social
-                    </span>
-                    <span class="mr-2">
-                      <i class="fas fa-circle text-info"></i> Referral
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
+            
           </div>
           <div class="row">
             <!-- 手柄模块 -->

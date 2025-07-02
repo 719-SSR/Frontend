@@ -259,7 +259,58 @@
 
 </body>
 <script>
-
+function generateRandomValue() {
+      return Math.floor(Math.random() * (35 - 29 + 1)) + 29;
+    }
+    function generateInitialData() {
+      var data = [];
+      for (var i = 0; i < 12; i++) {
+        data.push(generateRandomValue());
+      }
+      return data;
+    }
+    var labels = [];
+    for (var i = 1; i <= 12; i++) { labels.push(i); }
+    var ctxLine = document.getElementById('myAreaChart').getContext('2d');
+    var myAreaChart = new Chart(ctxLine, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: '水温',
+          data: generateInitialData(),
+          borderColor: 'rgba(75, 192, 192, 1)',
+          tension: 0.4,
+          fill: false
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animations: { x: { duration: 1000 }, y: { duration: 0 } },
+        scales: {
+          y: { min: 20, max: 40, type: 'linear' },
+          x: { type: 'linear' }
+        },
+        plugins: {
+          zoom: {
+            zoom: {
+              wheel: { enabled: true },
+              drag: { enabled: true },
+              mode: 'xy'
+            },
+            pan: { enabled: true, mode: 'xy' }
+          }
+        }
+      }
+    });
+    setInterval(function () {
+      myAreaChart.data.labels.shift();
+      myAreaChart.data.labels.push(myAreaChart.data.labels[myAreaChart.data.labels.length - 1] + 1);
+      myAreaChart.data.datasets[0].data.shift();
+      myAreaChart.data.datasets[0].data.push(generateRandomValue());
+      myAreaChart.update();
+    }, 3000);
 </script>
 
 </html>
