@@ -878,59 +878,100 @@ setInterval(fetchJoystickData, 10); // 1000ms = 1秒
     setInterval(updateESValue, 1000);
     updatePHValue(); updateLuxValue(); updateSpeedValue(); updateESValue();
 
-    // 折线图更新（模拟水温数据）
-    function generateRandomValue() {
-      return Math.floor(Math.random() * (35 - 29 + 1)) + 29;
-    }
-    function generateInitialData() {
-      var data = [];
-      for (var i = 0; i < 12; i++) {
-        data.push(generateRandomValue());
-      }
-      return data;
-    }
-    var labels = [];
-    for (var i = 1; i <= 12; i++) { labels.push(i); }
-    var ctxLine = document.getElementById('myAreaChart').getContext('2d');
-    var myAreaChart = new Chart(ctxLine, {
-      type: 'line',
-      data: {
-        labels: labels,
-        datasets: [{
-          label: '水温',
-          data: generateInitialData(),
-          borderColor: 'rgba(75, 192, 192, 1)',
-          tension: 0.4,
-          fill: false
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        animations: { x: { duration: 1000 }, y: { duration: 0 } },
-        scales: {
-          y: { min: 20, max: 40, type: 'linear' },
-          x: { type: 'linear' }
+// 全局时间步，用于计算周期
+let timeStep = 0;
+
+// 初始温度：25～30℃随机
+let currentTemp = 25 + Math.random() * 5;
+
+// 生成高斯随机数（Box–Muller 方法）
+function gaussianRand() {
+  let u = 0, v = 0;
+  while (u === 0) u = Math.random();
+  while (v === 0) v = Math.random();
+  return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+}
+
+// 根据上一温度生成下一温度
+function getNextTemp(prev, step) {
+  // 1. 日周期趋势：平均 27.5℃，振幅 2.5℃，周期 24 个时间步
+  const trend = 27.5 + 2.5 * Math.sin(2 * Math.PI * (step % 24) / 24);
+
+  // 2. 向趋势靠拢的漂移：alpha 控制靠拢速度
+  const alpha = 0.1;
+  const drift = (trend - prev) * alpha;
+
+  // 3. 高斯噪声：σ=0.2℃
+  const noise = gaussianRand() * 0.2;
+
+  let next = prev + drift + noise;
+
+  // 限制在 25–30℃
+  next = Math.min(Math.max(next, 25), 30);
+  return parseFloat(next.toFixed(2));
+}
+
+// 生成初始 12 点数据
+function generateInitialData() {
+  const data = [];
+  for (let i = 0; i < 12; i++) {
+    currentTemp = getNextTemp(currentTemp, timeStep++);
+    data.push(currentTemp);
+  }
+  return data;
+}
+
+// x 轴标签
+const labels = Array.from({ length: 12 }, (_, i) => i + 1);
+
+// 创建 Chart.js 折线图
+const ctxLine = document.getElementById('myAreaChart').getContext('2d');
+const myAreaChart = new Chart(ctxLine, {
+  type: 'line',
+  data: {
+    labels: labels,
+    datasets: [{
+      label: '水温 (℃)',
+      data: generateInitialData(),
+      borderColor: 'rgba(75, 192, 192, 1)',
+      tension: 0.4,
+      fill: false
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    animations: { x: { duration: 1000 }, y: { duration: 0 } },
+    scales: {
+      y: { min: 25, max: 30, type: 'linear' },
+      x: { type: 'linear' }
+    },
+    plugins: {
+      zoom: {
+        zoom: {
+          wheel: { enabled: true },
+          drag: { enabled: true },
+          mode: 'xy'
         },
-        plugins: {
-          zoom: {
-            zoom: {
-              wheel: { enabled: true },
-              drag: { enabled: true },
-              mode: 'xy'
-            },
-            pan: { enabled: true, mode: 'xy' }
-          }
-        }
+        pan: { enabled: true, mode: 'xy' }
       }
-    });
-    setInterval(function () {
-      myAreaChart.data.labels.shift();
-      myAreaChart.data.labels.push(myAreaChart.data.labels[myAreaChart.data.labels.length - 1] + 1);
-      myAreaChart.data.datasets[0].data.shift();
-      myAreaChart.data.datasets[0].data.push(generateRandomValue());
-      myAreaChart.update();
-    }, 3000);
+    }
+  }
+});
+
+// 每 3 秒更新一次
+setInterval(() => {
+  // 滑动窗口
+  myAreaChart.data.labels.shift();
+  myAreaChart.data.labels.push(myAreaChart.data.labels.slice(-1)[0] + 1);
+
+  // 计算新温度
+  currentTemp = getNextTemp(currentTemp, timeStep++);
+  myAreaChart.data.datasets[0].data.shift();
+  myAreaChart.data.datasets[0].data.push(currentTemp);
+
+  myAreaChart.update();
+}, 3000);
 
     // 摄像头功能代码
     const videoElement = document.getElementById('video');
