@@ -184,7 +184,7 @@
                     <div class="col mr-2">
                       <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                         光强</div>
-                      <span id="luxValue" class="h5 mb-0 font-weight-bold text-gray-800 mr-3">2300</span>
+                      <span id="luxValue" class="h5 mb-0 font-weight-bold text-gray-800 mr-3">38954.1</span>
                       <span id="LUXVule">单位：lux</span>
                     </div>
                   </div>
@@ -198,7 +198,7 @@
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                       <div class="text-xs font-weight-bold text-info text-uppercase mb-1">速度</div>
-                      <span id="speedValue" class="h5 mb-0 font-weight-bold text-gray-800 mr-3">2300</span>
+                      <span id="speedValue" class="h5 mb-0 font-weight-bold text-gray-800 mr-3">1.8</span>
                       <span id="SPEEDVule">单位：m/s</span>
                     </div>
                   </div>
@@ -213,7 +213,7 @@
                     <div class="col mr-2">
                       <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
                         电导率</div>
-                      <span id="esValue" class="h5 mb-0 font-weight-bold text-gray-800 mr-3">1800</span>
+                      <span id="esValue" class="h5 mb-0 font-weight-bold text-gray-800 mr-3">149.8</span>
                       <span id="ESVule">单位：µS/cm</span>
                     </div>
                   </div>
@@ -458,47 +458,78 @@
 
   <!-- Page level custom scripts -->
   <script>
-    // PH、光强、速度、电导率数值更新函数
-    function generateRandomPH() {
-      const min = 6.0, max = 7.0;
-      return Math.round((Math.random() * (max - min) + min) * 10) / 10;
-    }
-    function updatePHValue() {
-      const phElement = document.getElementById('phValue');
-      if (phElement) {
-        phElement.textContent = generateRandomPH().toFixed(1);
-      }
-    }
-    function generateRandomLux() {
-      const min = 2000.0, max = 4000.0;
-      return Math.round((Math.random() * (max - min) + min) * 10) / 10;
-    }
-    function updateLuxValue() {
-      const luxElement = document.getElementById('luxValue');
-      if (luxElement) {
-        luxElement.textContent = generateRandomLux().toFixed(1);
-      }
-    }
-    function generateRandomSpeed() {
-      const min = 2000.0, max = 4000.0;
-      return Math.round((Math.random() * (max - min) + min) * 10) / 10;
-    }
-    function updateSpeedValue() {
-      const speedElement = document.getElementById('speedValue');
-      if (speedElement) {
-        speedElement.textContent = generateRandomSpeed().toFixed(1);
-      }
-    }
-    function generateRandomES() {
-      const min = 2000.0, max = 4000.0;
-      return Math.round((Math.random() * (max - min) + min) * 10) / 10;
-    }
-    function updateESValue() {
-      const esElement = document.getElementById('esValue');
-      if (esElement) {
-        esElement.textContent = generateRandomES().toFixed(1);
-      }
-    }
+// 1. 高斯随机数（Box–Muller）
+function gaussianRand() {
+  let u = 0, v = 0;
+  while (u === 0) u = Math.random();
+  while (v === 0) v = Math.random();
+  return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+}
+
+// 2. 通用下一步计算：
+//    prev —— 上一次值
+//    min/max —— 允许范围
+//    sigma —— 噪声标准差（越大抖动越剧烈）
+//    alpha —— 均值回复系数（越大越快回到区间中线）
+function getNextValue(prev, min, max, sigma, alpha) {
+  const mean = (min + max) / 2;
+  const drift = (mean - prev) * alpha;
+  const noise = gaussianRand() * sigma;
+  let next = prev + drift + noise;
+  // 限制到 [min, max]
+  next = Math.min(Math.max(next, min), max);
+  return next;
+}
+
+// 3. 各指标的初始值和参数设置
+let currentPH    = 6.2   + Math.random() * (7.1   - 6.2);
+let currentLux   = 32567 + Math.random() * (49283 - 32567);
+let currentSpeed = 2.7   + Math.random() * (3.8   - 2.7);
+let currentES    = 111   + Math.random() * (197   - 111);
+
+// 4. 生成/更新函数
+function generateRandomPH() {
+  currentPH = getNextValue(currentPH, 6.2, 7.1,   0.02, 0.2);
+  return parseFloat(currentPH.toFixed(1));
+}
+function generateRandomLux() {
+  currentLux = getNextValue(currentLux, 32567, 49283, 500, 0.1);
+  return parseFloat(currentLux.toFixed(1));
+}
+function generateRandomSpeed() {
+  currentSpeed = getNextValue(currentSpeed, 2.7, 3.8,   0.05, 0.2);
+  return parseFloat(currentSpeed.toFixed(1));
+}
+function generateRandomES() {
+  currentES = getNextValue(currentES, 111, 197,        2,   0.1);
+  return parseFloat(currentES.toFixed(1));
+}
+
+// 5. 更新页面上显示的值（与原 updateXxxValue 一致）
+function updatePHValue() {
+  const el = document.getElementById('phValue');
+  if (el) el.textContent = generateRandomPH();
+}
+function updateLuxValue() {
+  const el = document.getElementById('luxValue');
+  if (el) el.textContent = generateRandomLux();
+}
+function updateSpeedValue() {
+  const el = document.getElementById('speedValue');
+  if (el) el.textContent = generateRandomSpeed();
+}
+function updateESValue() {
+  const el = document.getElementById('esValue');
+  if (el) el.textContent = generateRandomES();
+}
+
+// 6. 定时调用（假设还是每 3 秒一次）
+setInterval(() => {
+  updatePHValue();
+  updateLuxValue();
+  updateSpeedValue();
+  updateESValue();
+}, 3000);
     // 使用fetch发送GraphQL请求
 // function fetchJoystickData() {
 //     fetch('http://localhost:5000/graphql', {
